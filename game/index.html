@@ -321,10 +321,11 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
   }
 
   /* 난이도: 낙하속도·생성간격·크기 */
+  /* 속도 = "초당 px" (프레임 기반이면 120/144Hz 모니터에서 2~2.4배 빨라짐 → 시간 기반으로 통일) */
   var DIFF = {
-    easy : { spawn:620, minSp:1.6, maxSp:2.6, size:52, label:'쉬움' },
-    hard : { spawn:400, minSp:2.8, maxSp:4.6, size:42, label:'어려움' },
-    vhard: { spawn:260, minSp:4.2, maxSp:7.0, size:34, label:'매우 어려움' }
+    easy : { spawn:620, minSp: 96, maxSp:156, size:52, label:'쉬움' },
+    hard : { spawn:400, minSp:168, maxSp:276, size:42, label:'어려움' },
+    vhard: { spawn:260, minSp:252, maxSp:420, size:34, label:'매우 어려움' }
   };
   var curDiff='easy', curTime=30;
 
@@ -376,11 +377,15 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
     s.style.width=d.size+'px'; s.style.height=d.size+'px';
     var x=Math.random()*Math.max(10,(stage.clientWidth-d.size));
     s.style.left=x+'px'; s.style.top=(-d.size)+'px';
-    var sp=d.minSp+Math.random()*(d.maxSp-d.minSp), rot=(Math.random()*2-1)*4, y=-d.size;
+    var sp=d.minSp+Math.random()*(d.maxSp-d.minSp);   /* px/초 */
+    var rot=(Math.random()*2-1)*4, y=-d.size;
+    var last=performance.now();
     stage.appendChild(s);
-    function step(){
+    function step(now){
       if(!running){ s.remove(); return; }
-      y+=sp;
+      var dt=Math.min(0.05, (now-last)/1000);          /* 탭 전환 등으로 튀는 것 방지 */
+      last=now;
+      y += sp*dt;                                       /* 모니터 주사율과 무관 */
       s.style.transform='translateY('+y+'px) rotate('+(y*rot*0.07)+'deg)';
       if(y>stage.clientHeight+50){ s.remove(); return; }
       s._raf=requestAnimationFrame(step);
@@ -397,7 +402,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
       setTimeout(function(){ p.remove(); }, 780);
       cancelAnimationFrame(s._raf); s.remove();
     });
-    step();
+    s._raf=requestAnimationFrame(step);
   }
 
   function stop(){
@@ -412,11 +417,13 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
     if(running) return;
     score=0; time=curTime; scoreEl.textContent=0; timeEl.textContent=time;
     running=true; btn.disabled=true; btn.textContent='진행 중...';
+    var endAt=performance.now()+curTime*1000;
     spawner=setInterval(spawn, DIFF[curDiff].spawn);
     ticker=setInterval(function(){
-      time--; timeEl.textContent=time;
+      var left=Math.ceil((endAt-performance.now())/1000);
+      time=Math.max(0,left); timeEl.textContent=time;
       if(time<=0) stop();
-    }, 1000);
+    }, 200);
   });
 })();
 

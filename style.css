@@ -495,3 +495,36 @@ footer{ font-family:'Gaegu',cursive !important; font-size:17px !important; paddi
 
 /* 이모지 → 이미지 아이콘 */
 .e-ico{display:inline-block;width:1.05em;height:1.05em;vertical-align:-0.18em;background-size:contain;background-repeat:no-repeat;background-position:center;margin:0 .04em}
+
+
+/* ══════════════════════════════════════════════
+   카테고리 nav → 커스텀 페이지와 동일한 마스킹테이프
+   (메인·프로필·미니게임과 색/순서 완전히 일치)
+   ══════════════════════════════════════════════ */
+:root{
+  --tape-m:rgba(158,212,191,.72);   /* 민트 */
+  --tape-g:rgba(181,223,160,.72);   /* 연두 */
+  --tape-gr:rgba(122,183,126,.66);  /* 초록 */
+  --tape-p:rgba(198,163,222,.58);   /* 연보라 */
+  --tape-y:rgba(255,224,178,.8);    /* 노랑 */
+}
+.nav .nav-inner{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px 8px; }
+.nav a:not(.nav-logo){
+  font-family:'Gaegu',cursive; font-weight:700; font-size:20px; text-decoration:none;
+  color:var(--text); padding:8px 24px; border-radius:0;
+  background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.4) 0 8px, transparent 8px 16px);
+  box-shadow:0 2px 5px rgba(62,142,126,.2);
+  transition:transform .15s;
+}
+.nav a:not(.nav-logo):hover{ transform:translateY(-2px) rotate(0deg) !important; opacity:1; }
+/* 1로고 · 2메인 · 3프로필 · 4공지 · 5일정 · 6업보 · 7다이어리 · 8노래책 · 9옷장 · 10미니게임 */
+.nav .nav-inner > a:nth-child(2){ transform:rotate(-2deg);   background-color:var(--tape-m); }
+.nav .nav-inner > a:nth-child(3){ transform:rotate(1.5deg);  background-color:var(--tape-g); }
+.nav .nav-inner > a:nth-child(4){ transform:rotate(-1deg);   background-color:var(--tape-p); }
+.nav .nav-inner > a:nth-child(5){ transform:rotate(2deg);    background-color:var(--tape-y); }
+.nav .nav-inner > a:nth-child(6){ transform:rotate(-1.5deg); background-color:var(--tape-m); }
+.nav .nav-inner > a:nth-child(7){ transform:rotate(1deg);    background-color:var(--tape-p); }
+.nav .nav-inner > a:nth-child(8){ transform:rotate(-1deg);   background-color:var(--tape-gr); }
+.nav .nav-inner > a:nth-child(9){ transform:rotate(1.5deg);  background-color:var(--tape-g); }
+.nav .nav-inner > a:nth-child(10){transform:rotate(-2deg);   background-color:var(--tape-p); }
+.nav a.active{ box-shadow:0 0 0 2.5px var(--main-dark), 0 2px 5px rgba(62,142,126,.2); color:var(--main-dark); }

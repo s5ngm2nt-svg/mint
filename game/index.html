@@ -13,7 +13,12 @@
   --main:#8CC7AE; --main-dark:#3E8E7E; --main-light:#EAFBF6; --bg:#EAFBF6; --card:#FCFCFC;
   --logo:#3E8E7E; --accent:#3E8E7E; --apple:#5E8A4E; --apple-l:#B5DFA0;
   --text:#3D5148; --ink:#37554A; --text-soft:#7C9489; --line:#DCEDE4;
-  --tape-m:rgba(158,212,191,.72); --tape-g:rgba(181,223,160,.72); --tape-b:rgba(190,225,245,.72); --tape-y:rgba(255,224,178,.8);
+  --tape-m:rgba(158,212,191,.72);      /* 민트 */
+  --tape-g:rgba(181,223,160,.72);      /* 연두 */
+  --tape-gr:rgba(122,183,126,.66);     /* 초록 */
+  --tape-p:rgba(198,163,222,.58);      /* 연보라 (구 하늘색 대체) */
+  --tape-y:rgba(255,224,178,.8);       /* 노랑 */
+  --tape-b:rgba(198,163,222,.58);      /* 하위호환: 옛 하늘색 → 연보라 */
   --page-width:1180px;
 }
 body.dark{
@@ -44,21 +49,16 @@ header.logo-h .lg span{font-family:'Gaegu',cursive;font-weight:700;font-size:24p
 nav.tape-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 8px;padding:18px 0 30px}
 nav.tape-nav a{font-family:'Gaegu',cursive;font-weight:700;font-size:20px;text-decoration:none;color:var(--ink);padding:8px 24px;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 5px rgba(62,142,126,.2);transition:transform .15s}
 nav.tape-nav a:hover{transform:translateY(-2px) rotate(0)!important;opacity:1}
-nav.tape-nav a:nth-child(9n+1){transform:rotate(-2deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(9n+2){transform:rotate(1.5deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(9n+3){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(9n+4){transform:rotate(2deg);background-color:var(--tape-y)}
-nav.tape-nav a:nth-child(9n+5){transform:rotate(-1.5deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(9n+6){transform:rotate(1deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(9n+7){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(9n+8){transform:rotate(1.5deg);background-color:var(--tape-y)}
-nav.tape-nav a:nth-child(9n+9){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(1){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(2){transform:rotate(1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(3){transform:rotate(-1deg);background-color:var(--tape-p)}
+nav.tape-nav a:nth-child(4){transform:rotate(2deg);background-color:var(--tape-y)}
+nav.tape-nav a:nth-child(5){transform:rotate(-1.5deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(6){transform:rotate(1deg);background-color:var(--tape-p)}
+nav.tape-nav a:nth-child(7){transform:rotate(-1deg);background-color:var(--tape-gr)}
+nav.tape-nav a:nth-child(8){transform:rotate(1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(9){transform:rotate(-2deg);background-color:var(--tape-p)}
 nav.tape-nav a.active{box-shadow:0 0 0 2.5px var(--main-dark),0 2px 5px rgba(62,142,126,.2);color:var(--main-dark)}
-nav.tape-nav a:nth-child(3){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(4){transform:rotate(2deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(5){transform:rotate(-1.5deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(6){transform:rotate(1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(7){transform:rotate(-1deg);background-color:var(--tape-y)}
 .tape{position:absolute;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 4px rgba(0,0,0,.08);z-index:3}
 
 .board{position:relative;z-index:10;max-width:720px;margin:0 auto;background:var(--card);border-radius:16px 6px 18px 7px;box-shadow:0 12px 30px rgba(62,142,126,.2);padding:26px 28px 30px;transform:rotate(-.4deg)}
@@ -193,7 +193,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
 
   <div class="board" id="board-catch">
     <span class="tape" style="top:-13px;left:12%;width:110px;height:30px;transform:rotate(-5deg);background-color:var(--tape-g)"></span>
-    <span class="tape" style="top:-12px;right:13%;width:96px;height:27px;transform:rotate(4deg);background-color:var(--tape-b)"></span>
+    <span class="tape" style="top:-12px;right:13%;width:96px;height:27px;transform:rotate(4deg);background-color:var(--tape-p)"></span>
     <h1>애플 캐치 🍏</h1>
     <div class="sub">떨어지는 사과 · 하트를 눌러서 잡아보세요!</div>
     <div class="optrow">

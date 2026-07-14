@@ -14,7 +14,12 @@
   --main:#8CC7AE; --main-dark:#3E8E7E; --main-light:#EAFBF6; --bg:#EAFBF6; --card:#FCFCFC;
   --logo:#3E8E7E; --accent:#3E8E7E; --apple:#5E8A4E; --apple-l:#B5DFA0;
   --text:#3D5148; --ink:#37554A; --text-soft:#7C9489; --line:#DCEDE4;
-  --tape-m:rgba(158,212,191,.72); --tape-g:rgba(181,223,160,.72); --tape-b:rgba(190,225,245,.72); --tape-y:rgba(255,224,178,.8);
+  --tape-m:rgba(158,212,191,.72);      /* 민트 */
+  --tape-g:rgba(181,223,160,.72);      /* 연두 */
+  --tape-gr:rgba(122,183,126,.66);     /* 초록 */
+  --tape-p:rgba(198,163,222,.58);      /* 연보라 (구 하늘색 대체) */
+  --tape-y:rgba(255,224,178,.8);       /* 노랑 */
+  --tape-b:rgba(198,163,222,.58);      /* 하위호환: 옛 하늘색 → 연보라 */
   --page-width:1180px;
 }
 body.dark{
@@ -52,22 +57,16 @@ header.logo-h .lg span{font-family:'Gaegu',cursive;font-weight:700;font-size:24p
 nav.tape-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 8px;padding:18px 0 30px}
 nav.tape-nav a{font-family:'Gaegu',cursive;font-weight:700;font-size:20px;text-decoration:none;color:var(--ink);padding:8px 24px;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 5px rgba(62,142,126,.2);transition:transform .15s}
 nav.tape-nav a:hover{transform:translateY(-2px) rotate(0)!important;opacity:1}
-nav.tape-nav a:nth-child(9n+1){transform:rotate(-2deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(9n+2){transform:rotate(1.5deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(9n+3){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(9n+4){transform:rotate(2deg);background-color:var(--tape-y)}
-nav.tape-nav a:nth-child(9n+5){transform:rotate(-1.5deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(9n+6){transform:rotate(1deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(9n+7){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(9n+8){transform:rotate(1.5deg);background-color:var(--tape-y)}
-nav.tape-nav a:nth-child(9n+9){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(1){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(2){transform:rotate(1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(3){transform:rotate(-1deg);background-color:var(--tape-p)}
+nav.tape-nav a:nth-child(4){transform:rotate(2deg);background-color:var(--tape-y)}
+nav.tape-nav a:nth-child(5){transform:rotate(-1.5deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(6){transform:rotate(1deg);background-color:var(--tape-p)}
+nav.tape-nav a:nth-child(7){transform:rotate(-1deg);background-color:var(--tape-gr)}
+nav.tape-nav a:nth-child(8){transform:rotate(1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(9){transform:rotate(-2deg);background-color:var(--tape-p)}
 nav.tape-nav a.active{box-shadow:0 0 0 2.5px var(--main-dark),0 2px 5px rgba(62,142,126,.2);color:var(--main-dark)}
-nav.tape-nav a:nth-child(3){transform:rotate(-1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(4){transform:rotate(2deg);background-color:var(--tape-m)}
-nav.tape-nav a:nth-child(5){transform:rotate(-1.5deg);background-color:var(--tape-g)}
-nav.tape-nav a:nth-child(6){transform:rotate(1deg);background-color:var(--tape-b)}
-nav.tape-nav a:nth-child(7){transform:rotate(-1deg);background-color:var(--tape-y)}
-nav.tape-nav a:nth-child(8){transform:rotate(1.5deg);background-color:var(--tape-m)}
 
 .tape{position:absolute;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 4px rgba(0,0,0,.08);z-index:3}
 
@@ -92,11 +91,21 @@ figure.polaroid .dood{position:absolute;pointer-events:none}
 .memo.wob1{animation:wobB 4.2s ease-in-out infinite}
 .memo.wob2{animation:wobA 4.7s ease-in-out infinite}
 .memo h2{font-family:'Jua',sans-serif;font-size:21px;color:var(--ink);margin:2px 0 12px}
+.memo.has-stamp{padding-right:216px}
+@media (max-width:900px){.memo.has-stamp{padding-right:22px}
+ .memo.has-stamp .dday-stamp{position:static;transform:rotate(4deg);margin:10px auto 0}}
 .memo ul{list-style:none;font-family:'Gaegu',cursive;font-size:19px;line-height:1.8;color:var(--text)}
 .memo ul strong{color:var(--ink)}
-.dday-stamp{position:absolute;right:-26px;bottom:-30px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:140px;height:122px;background:var(--img-apple-note, url('../apple-note.png')) center/contain no-repeat;transform:rotate(5deg);padding-top:10px}
-.dday-stamp .l{font-family:'Gaegu',cursive;font-weight:700;font-size:14px;color:var(--apple);white-space:nowrap}
-.dday-stamp .v{font-family:'Jua',sans-serif;font-size:24px;color:var(--apple)}
+/* 사과 원 중심이 세로 57.3% → translateY 로 그만큼 내려 정렬 */
+.dday-stamp{position:absolute;right:18px;top:50%;
+  width:172px;height:158px;
+  background:var(--img-apple-note, url('../apple-note.png')) center/contain no-repeat;
+  transform:translateY(-50%) rotate(4deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  pointer-events:none}
+.dday-stamp .in{display:flex;flex-direction:column;align-items:center;gap:1px;transform:translateY(11.5px)}
+.dday-stamp .l{font-family:'Gaegu',cursive;font-weight:700;font-size:16px;color:var(--apple);white-space:nowrap;line-height:1.1}
+.dday-stamp .v{font-family:'Jua',sans-serif;font-size:33px;color:var(--apple);line-height:1.05;letter-spacing:-.5px}
 
 /* 섹션 */
 .sect{margin-top:54px}
@@ -209,7 +218,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
     <div class="heroside">
       <div class="greet" id="head-sub">안농! 나 목소리 1티어 <b>송민트</b> 💚</div>
 
-      <div class="memo a wob1">
+      <div class="memo a wob1 has-stamp">
         <span class="tape" style="top:-12px;left:50%;width:92px;height:26px;transform:translateX(-50%) rotate(-3deg);background-color:var(--tape-m)"></span>
         <h2>memo 📎 프로필</h2>
         <ul>
@@ -219,7 +228,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
           <li>· 특징 <strong id="info-mbti">E쁨</strong></li>
           <li>· 팬 애칭 <strong id="info-fandom">애플이</strong> 🍏</li>
         </ul>
-        <div class="dday-stamp"><span class="l">생일까지</span><span class="v" id="dday">D-?</span></div>
+        <div class="dday-stamp"><span class="in"><span class="l">생일까지</span><span class="v" id="dday">D-?</span></span></div>
       </div>
     </div>
   </div>
@@ -239,7 +248,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
         </ul>
       </div>
       <div class="memo a wob1">
-        <span class="tape" style="top:-12px;right:30px;width:88px;height:24px;transform:rotate(4deg);background-color:var(--tape-b)"></span>
+        <span class="tape" style="top:-12px;right:30px;width:88px;height:24px;transform:rotate(4deg);background-color:var(--tape-p)"></span>
         <h2>한마디 💬</h2>
         <ul>
           <li id="quote">· "야르하게 부탁드립니다 💚"</li>

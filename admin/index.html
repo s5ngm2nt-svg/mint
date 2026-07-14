@@ -25,6 +25,10 @@
     .ord-btn { width: 22px; height: 18px; line-height: 1; padding: 0; border: 1px solid var(--main-light); background: var(--card); color: var(--main-dark); border-radius: 5px; font-size: 9px; cursor: pointer; transition: background .2s; }
     .ord-btn:hover:not(:disabled) { background: var(--main-light); }
     .ord-btn:disabled { opacity: .3; cursor: default; }
+      .hint-box{ margin-top:6px; padding:9px 12px; border-radius:10px; background:var(--main-light);
+      color:var(--text-mid); font-size:11.5px; line-height:1.75; }
+    .hint-box code{ background:rgba(0,0,0,.06); padding:1px 5px; border-radius:4px; font-size:11px; }
+    body.dark .hint-box{ background:#2B3E36; }
   </style>
 </head>
 <body>
@@ -63,7 +67,7 @@
     <div class="card">
       <div class="card-title">🖼 프로필 사진</div>
       <div class="form-field">
-        <label class="input-label">프사 이미지 링크 (URL) — 추천 ⭐</label>
+        <label class="input-label">프사 이미지 링크 (URL) — 추천 ⭐ <b style="color:var(--main-dark)">— 정사각형 1:1 · 500×500 이상</b></label>
         <input class="input" id="f-avatar" type="url" placeholder="https://.../image.png" oninput="previewAvatar()">
         <div style="font-size:11px;color:var(--text-soft);margin-top:6px">원하는 이미지 주소(.png/.jpg/.gif)를 넣으면 <b>이 링크가 우선</b> 사용돼요 (SOOP 대신).</div>
       </div>
@@ -135,7 +139,7 @@
       <div class="form-grid">
         <div class="form-field full"><label class="input-label">영상 제목 *</label><input class="input" id="os-title" placeholder="예: 노래 제목"></div>
         <div class="form-field full"><label class="input-label">SOOP VOD ID *</label><input class="input" id="os-vod" placeholder="194780409"></div>
-        <div class="form-field full"><label class="input-label">썸네일 URL (선택 · 비우면 자동 시도)</label><input class="input" id="os-thumb" placeholder="https:// (선택)"></div>
+        <div class="form-field full"><label class="input-label">썸네일 URL (선택 · 비우면 자동 시도) <b style="color:var(--main-dark)">— 16:9 · 1280×720 권장</b></label><input class="input" id="os-thumb" placeholder="https:// (선택)"></div>
         <div class="form-field full" style="font-size:12px;color:var(--text-soft)">💡 SOOP VOD 주소 sooplive.com/아이디/v/<b>194780409</b> 에서 숫자 부분만 입력</div>
         <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addOriginalSong()">+ 추가</button></div>
       </div>
@@ -143,18 +147,18 @@
     </div>
     <div class="card">
       <div class="card-title">🏠 메인 페이지 편집</div>
-      <div class="form-field"><label class="input-label">메인 큰 사진 URL (비우면 mint-main.jpg)</label><input class="input" id="f-main-art" type="url" placeholder="https://.../image.jpg"></div>
+      <div class="form-field"><label class="input-label">메인 큰 사진 URL <b style="color:var(--main-dark)">— 가로형 16:10 · 1600×1000 권장</b></label><input class="input" id="f-main-art" type="url" placeholder="https://.../image.jpg"><div class="hint-box">📐 <b>16:10 가로 사진</b> (최소 1200×750, 권장 1600×1000)<br>· 화면에선 <b>오른쪽 위쪽</b>을 기준으로 잘려요 → 인물을 <b>우측 상단</b>에 두면 예쁘게 나와요<br>· 비우면 기본 <code>mint-main.jpg</code> 유지</div></div>
       <div class="form-field"><label class="input-label">메인 사진 아래 소개 문구 (줄바꿈=엔터)</label><textarea class="input" id="f-main-story" rows="3" placeholder='"목소리 1티어"&#10;개인 소속 · 여 · 버추얼 스트리머 | 팬 애칭 애플 🍏'></textarea></div>
       <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveLocalProfile()">저장 ♥</button></div>
     </div>
     <div class="card">
       <div class="card-title">🖼 사진 · 테마 이미지 (비우면 기본 이미지)</div>
-      <div class="form-field"><label class="input-label">프로필 페이지 큰 사진 URL</label><input class="input" id="f-profile-art" type="url" placeholder="비우면 프사 → mint-face.jpg"></div>
-      <div class="form-field"><label class="input-label">🍏 사과 (낙하 장식 · 이모지 · 게임)</label><input class="input" id="f-img-apple" type="url" placeholder="비우면 apple.png"></div>
-      <div class="form-field"><label class="input-label">🍏 반쪽 사과 (낙하 · 게임 +2점)</label><input class="input" id="f-img-apple-half" type="url" placeholder="비우면 apple-half.png"></div>
-      <div class="form-field"><label class="input-label">💜 보라 하트 (낙하 · 이모지 · 게임 +2점)</label><input class="input" id="f-img-heart-p" type="url" placeholder="비우면 heart-purple.png"></div>
-      <div class="form-field"><label class="input-label">💚 민트 하트 (낙하 · 이모지 · 게임)</label><input class="input" id="f-img-heart-m" type="url" placeholder="비우면 heart-mint.png"></div>
-      <div class="form-field"><label class="input-label">🍏 D-Day 사과 (생일 카운트 배경)</label><input class="input" id="f-img-apple-note" type="url" placeholder="비우면 apple-note.png"></div>
+      <div class="form-field"><label class="input-label">프로필 페이지 큰 사진 URL <b style="color:var(--main-dark)">— 세로형 4:5 · 1000×1250 권장</b></label><input class="input" id="f-profile-art" type="url" placeholder="비우면 mint-face.jpg"><div class="hint-box">📐 <b>4:5 세로 사진</b> (최소 800×1000, 권장 1000×1250)<br>· 화면에선 <b>가운데 위쪽</b>을 기준으로 잘려요 → 얼굴이 <b>상단 중앙</b>에 오게<br>· 비우면 기본 <code>mint-face.jpg</code> 유지</div></div>
+      <div class="form-field"><label class="input-label">🍏 사과 (낙하 장식 · 이모지 · 게임) <b style="color:var(--main-dark)">— 정사각 1:1 · 배경 투명 PNG · 256×256 권장</b></label><input class="input" id="f-img-apple" type="url" placeholder="비우면 apple.png"></div>
+      <div class="form-field"><label class="input-label">🍏 반쪽 사과 (낙하 · 게임 +2점) <b style="color:var(--main-dark)">— 정사각 1:1 · 배경 투명 PNG · 256×256 권장</b></label><input class="input" id="f-img-apple-half" type="url" placeholder="비우면 apple-half.png"></div>
+      <div class="form-field"><label class="input-label">💜 보라 하트 (낙하 · 이모지 · 게임 +2점) <b style="color:var(--main-dark)">— 정사각 1:1 · 배경 투명 PNG · 256×256 권장</b></label><input class="input" id="f-img-heart-p" type="url" placeholder="비우면 heart-purple.png"></div>
+      <div class="form-field"><label class="input-label">💚 민트 하트 (낙하 · 이모지 · 게임) <b style="color:var(--main-dark)">— 정사각 1:1 · 배경 투명 PNG · 256×256 권장</b></label><input class="input" id="f-img-heart-m" type="url" placeholder="비우면 heart-mint.png"></div>
+      <div class="form-field"><label class="input-label">🍏 D-Day 사과 (생일 카운트 배경) <b style="color:var(--main-dark)">— 가로 살짝 넓게 · 투명 PNG · 520×450 권장</b></label><input class="input" id="f-img-apple-note" type="url" placeholder="비우면 apple-note.png"></div>
       <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveLocalProfile()">저장 ♥</button></div>
     </div>
     <div class="card">
@@ -172,7 +176,7 @@
       <div class="card-title">공지 추가</div>
       <div class="form-field"><label class="input-label">제목 *</label><input class="input" id="noti-title"></div>
       <div class="form-field"><label class="input-label">내용</label><textarea class="input" id="noti-content" rows="4"></textarea></div>
-      <div class="form-field"><label class="input-label">이미지 링크 (여러 개면 줄바꿈으로 붙여넣기)</label><textarea id="noti-image-url" class="input" rows="2" placeholder="https://... (한 줄에 하나씩)"></textarea></div>
+      <div class="form-field"><label class="input-label">이미지 링크 (여러 개면 줄바꿈으로 붙여넣기) <b style="color:var(--main-dark)">— 가로 4:3 또는 16:9 · 폭 1200px 이상</b></label><textarea id="noti-image-url" class="input" rows="2" placeholder="https://... (한 줄에 하나씩)"></textarea></div>
       <div class="form-field full" style="font-size:11px;color:var(--text-soft);margin-top:-4px">💡 SOOP에 <b>비공개 게시판</b>을 만들어 이미지를 올린 뒤 → 이미지 <b>우클릭 → "이미지 주소 복사"</b> → 위 칸에 붙여넣기 (글 주소 말고 <b>이미지 주소</b>)</div>
       <div class="form-field"><label><input type="checkbox" id="noti-pin"> 📌 고정 공지</label></div>
       <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addNotice()">+ 추가</button></div>
@@ -355,7 +359,7 @@
           </select>
         </div>
         <div class="form-field full"><label class="input-label">내용</label><textarea class="input" id="diary-content" rows="5"></textarea></div>
-        <div class="form-field full"><label class="input-label">이미지 링크 (여러 개면 줄바꿈으로 붙여넣기)</label><textarea id="diary-image-url" class="input" rows="2" placeholder="https://... (한 줄에 하나씩)"></textarea></div>
+        <div class="form-field full"><label class="input-label">이미지 링크 (여러 개면 줄바꿈으로 붙여넣기) <b style="color:var(--main-dark)">— 가로 4:3 또는 16:9 · 폭 1200px 이상</b></label><textarea id="diary-image-url" class="input" rows="2" placeholder="https://... (한 줄에 하나씩)"></textarea></div>
         <div class="form-field full" style="font-size:11px;color:var(--text-soft);margin-top:-4px">💡 SOOP에 <b>비공개 게시판</b>을 만들어 이미지를 올린 뒤 → 이미지 <b>우클릭 → "이미지 주소 복사"</b> → 위 칸에 붙여넣기 (글 주소 말고 <b>이미지 주소</b>)</div>
         <div class="form-field"><label class="input-label">날짜</label><input class="input" id="diary-date" type="date"></div>
         <div class="form-field" style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="addDiary()">+ 추가</button></div>
@@ -403,7 +407,7 @@
         </div>
         <div class="form-field full"><label class="input-label">이름 *</label><input class="input" id="dr-name" placeholder="예: 기본 헤어"></div>
         <div class="form-field full"><label class="input-label">설명 (선택)</label><input class="input" id="dr-desc" placeholder="짧은 설명"></div>
-        <div class="form-field full"><label class="input-label">이미지 링크 (이미지 주소 붙여넣기)</label><input type="url" id="dr-img-url" class="input" placeholder="https://... 이미지 주소"></div>
+        <div class="form-field full"><label class="input-label">이미지 링크 (이미지 주소 붙여넣기) <b style="color:var(--main-dark)">— 세로 3:4 · 900×1200 권장</b></label><input type="url" id="dr-img-url" class="input" placeholder="https://... 이미지 주소"></div>
         <div class="form-field full" style="font-size:11px;color:var(--text-soft);margin-top:-4px">💡 SOOP <b>비공개 게시판</b>에 이미지 올린 뒤 → <b>우클릭 → "이미지 주소 복사"</b> → 위 칸에 붙여넣기. 권장 크기 <b>세로 3:4 (900×1200px)</b></div>
         <div class="form-field full"><label><input type="checkbox" id="dr-new"> ✨ <b>새 옷</b>으로 올리기 <span style="color:var(--text-soft);font-weight:400">(체크하면 옷장 '새 옷'에 포스터로 떠요)</span></label></div>
         <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addDressItem()">+ 추가</button></div>

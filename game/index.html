@@ -100,31 +100,52 @@ body.dark #gstage{background:linear-gradient(180deg,#1E2E28,#233A31)}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px}
 .gbtn.ghost{background:var(--card);color:var(--main-dark);border:2.5px solid var(--main);box-shadow:none}
 
-/* 사다리 */
-.lg-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
-.lg-cnt{display:flex;align-items:center;gap:8px;font-family:'Gaegu',cursive;font-weight:700;font-size:17px;color:var(--ink)}
-.lg-cnt b{font-family:'Jua',sans-serif;font-size:22px;color:var(--main-dark);min-width:26px;text-align:center}
-.lg-pm{width:32px;height:32px;border-radius:10px 4px 10px 4px;border:2px solid var(--main);background:var(--card);color:var(--main-dark);font-family:'Jua',sans-serif;font-size:18px;cursor:pointer;line-height:1}
-.lg-pm:hover{background:var(--main);color:#fff}
-.lg-pm:disabled{opacity:.4;cursor:default}
-.lg-btns{display:flex;gap:9px;flex-wrap:wrap}
-.gbtn.ghost{background:var(--card);color:var(--main-dark);border:2.5px solid var(--main);box-shadow:none}
-
-.lg-stage{position:relative;z-index:2;background:linear-gradient(180deg,#F1FBF6,#E4F5EC);border:2.5px dashed var(--main);border-radius:14px;padding:6px;overflow:hidden}
-body.dark .lg-stage{background:linear-gradient(180deg,#1E2E28,#233A31)}
-#lgCanvas{display:block;width:100%;height:440px}
-.lg-row{position:relative;height:52px}
-.lg-av{position:absolute;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;border:3px solid var(--main);background:var(--card);cursor:pointer;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(62,142,126,.2);transition:transform .15s;padding:0}
-.lg-av:hover{transform:translateX(-50%) translateY(-3px)}
-.lg-av.done{opacity:.45;cursor:default}
-.lg-av.done:hover{transform:translateX(-50%)}
-.lg-av img{width:26px;height:26px;object-fit:contain;pointer-events:none}
-.lg-res{position:absolute;transform:translateX(-50%);width:84px}
-.lg-res input{width:100%;padding:7px 6px;border:2px dashed var(--main);border-radius:8px;font-family:'Gaegu',cursive;font-weight:700;font-size:14px;text-align:center;background:var(--card);color:var(--text);outline:none;box-sizing:border-box}
-.lg-res input:focus{border-style:solid}
-.lg-res input:disabled{opacity:1;border-style:solid;background:#E9F8DF;border-color:var(--apple-l);color:var(--apple)}
-body.dark .lg-res input:disabled{background:#28402C}
-.lg-log{margin-top:14px;font-family:'Gaegu',cursive;font-weight:700;font-size:18px;color:var(--apple);text-align:center;line-height:1.8;min-height:24px}
+/* 사다리 (모요 구조) */
+.lg-top{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;}
+.lg-count{display:flex; align-items:center; gap:12px; font-family:'Gaegu',cursive; font-size:17px; font-weight:700; color:var(--ink);}
+.lg-count button{width:36px; height:36px; border-radius:50%; border:2px solid var(--main); background:var(--card); color:var(--main-dark); font-family:'Jua',sans-serif; font-size:18px; cursor:pointer; line-height:1;}
+.lg-count button:hover{background:var(--main-light);}
+.lg-count button:disabled{opacity:.4; cursor:default;}
+.lg-count b{font-family:'Jua',sans-serif; font-size:20px; min-width:30px; text-align:center; color:var(--main-dark);}
+.lg-hint{font-family:'Gaegu',cursive; font-size:16px; color:var(--text-soft); margin-bottom:8px;}
+.lg-btn{border:none; cursor:pointer; border-radius:999px; padding:11px 22px; font-family:'Jua',sans-serif; font-size:15px; background:var(--main); color:#fff; box-shadow:0 6px 14px rgba(62,142,126,.24); transition:transform .15s ease;}
+.lg-btn:hover{transform:translateY(-2px);}
+.lg-btn.ghost{background:var(--card); color:var(--main-dark); border:2.5px solid var(--main); box-shadow:none;}
+.lg-stage{position:relative; margin-top:4px; background:linear-gradient(180deg,#F1FBF6,#E4F5EC); border:2.5px dashed var(--main); border-radius:14px; padding:8px 6px;}
+body.dark .lg-stage{background:linear-gradient(180deg,#1E2E28,#233A31);}
+.lg-row{position:relative; height:60px;}
+#lgCanvas{display:block; width:100%;}
+.lg-av{position:absolute; transform:translateX(-50%); width:50px; height:50px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; border:3px solid; background:#fff; cursor:default;
+  transition:transform .15s ease; box-shadow:0 4px 10px rgba(62,142,126,.2); padding:0;}
+body.dark .lg-av{background:var(--card);}
+.lg-av img{width:70%; height:70%; object-fit:contain; pointer-events:none;}
+.lg-av.clickable{cursor:pointer;}
+.lg-av.clickable:hover{transform:translateX(-50%) translateY(-3px);}
+.lg-av.done{opacity:.35;}
+.lg-name{position:absolute; transform:translateX(-50%); width:86px; top:58px;}
+.lg-name input{width:100%; box-sizing:border-box; text-align:center; padding:6px 4px; border-radius:10px;
+  border:2px solid var(--line); background:var(--card); color:var(--text); font-family:'Gaegu',cursive; font-size:14px; font-weight:700; outline:none;}
+.lg-name input:focus{border-color:var(--main);}
+.lg-name .nm{display:block; text-align:center; font-family:'Gaegu',cursive; font-size:15px; font-weight:700;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.lg-runner{position:absolute; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  border:3px solid; background:#fff; z-index:5; pointer-events:none; transform:translate(-50%,-50%);
+  box-shadow:0 5px 12px rgba(0,0,0,.22);}
+body.dark .lg-runner{background:var(--card);}
+.lg-runner img{width:82%; height:82%; object-fit:contain;}
+.lg-res{position:absolute; transform:translateX(-50%); width:88px;}
+.lg-res input{width:100%; box-sizing:border-box; text-align:center; padding:9px 6px; border-radius:12px;
+  border:2px solid var(--line); background:var(--card); color:var(--text); font-family:'Gaegu',cursive; font-size:14px; font-weight:700; outline:none;}
+.lg-res input:focus{border-color:var(--main);}
+.lg-res .mask{display:block; text-align:center; padding:9px 6px; border-radius:12px; background:var(--main-light);
+  color:var(--main-dark); font-family:'Gaegu',cursive; font-size:15px; font-weight:700; transition:all .2s ease;}
+body.dark .lg-res .mask{background:#2B3E36;}
+.lg-res .mask.open{background:var(--card); border:2px solid; box-shadow:0 6px 14px rgba(62,142,126,.22); transform:scale(1.08);}
+.lg-log{margin-top:16px; display:flex; flex-direction:column; gap:6px;}
+.lg-log div{display:flex; align-items:center; gap:9px; font-family:'Gaegu',cursive; font-size:16px; font-weight:700; color:var(--text); background:var(--main-light); border-radius:10px; padding:8px 14px;}
+body.dark .lg-log div{background:#2B3E36;}
+.lg-log img{width:24px; height:24px; object-fit:contain;}
 
 /* 제비뽑기 */
 .dwgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:14px;margin-top:14px}
@@ -202,26 +223,21 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
   <div class="board" id="board-ladder" hidden>
     <span class="tape" style="top:-13px;left:12%;width:110px;height:30px;transform:rotate(-5deg);background-color:var(--tape-m)"></span>
     <h1>사다리타기 🪜</h1>
-    <div class="sub">결과를 적고, 캐릭터를 누르면 사다리를 타고 내려가요 🍏</div>
-
     <div class="lg-top">
-      <div class="lg-cnt">
-        <span>인원</span>
-        <button class="lg-pm" type="button" id="lg-minus">−</button>
-        <b id="lg-n">4</b>
-        <button class="lg-pm" type="button" id="lg-plus">+</button>
+      <div class="lg-count">인원
+        <button type="button" id="lg-minus">−</button><b id="lg-n">4</b><button type="button" id="lg-plus">+</button>
       </div>
-      <div class="lg-btns">
-        <button class="gbtn ghost" type="button" id="lg-allbtn" style="display:none">전부 공개</button>
-        <button class="gbtn" type="button" id="lg-build">🪜 사다리 만들기</button>
-        <button class="gbtn ghost" type="button" id="lg-reset" style="display:none">다시 하기</button>
+      <div style="display:flex; gap:8px;">
+        <button class="lg-btn ghost" type="button" id="lg-reset" style="display:none">↺ 다시하기</button>
+        <button class="lg-btn ghost" type="button" id="lg-all" style="display:none">전부 공개</button>
+        <button class="lg-btn" type="button" id="lg-start">🍏 시작하기</button>
       </div>
     </div>
-
+    <div class="lg-hint" id="lg-hint">아래 칸에 결과를 적고 시작하기를 누르면, 사다리가 숨겨지고 캐릭터를 눌러 타고 내려가요 🍏</div>
     <div class="lg-stage" id="lg-stage">
-      <div class="lg-row" id="lg-tops"></div>
+      <div class="lg-row" id="lg-tops" style="height:96px;"></div>
       <canvas id="lgCanvas"></canvas>
-      <div class="lg-row" id="lg-bots"></div>
+      <div class="lg-row" id="lg-bots" style="height:48px;"></div>
     </div>
     <div class="lg-log" id="lg-log"></div>
   </div>
@@ -229,11 +245,11 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
   <div class="board" id="board-draw" hidden>
     <span class="tape" style="top:-13px;right:12%;width:110px;height:30px;transform:rotate(4deg);background-color:var(--tape-g)"></span>
     <h1>제비뽑기 🎋</h1>
-    <div class="sub">종이 하나 골라서 뽑아보기! 결과는 뽑을 때마다 랜덤</div>
+    <div class="sub">종이 하나 골라서 뽑아보기! <b>꽝*3</b> 처럼 <b>*개수</b>를 붙이면 그만큼 들어가요 🍏</div>
 
     <div class="fieldrow">
-      <label>뽑을 항목 <small>(쉼표로 구분)</small></label>
-      <input id="dwItems" type="text" value="당첨 🍏, 꽝, 꽝, 꽝, 한 번 더, 노래 신청권">
+      <label>뽑을 항목 <small>(쉼표로 구분 · 개수는 <b>항목*숫자</b>)</small></label>
+      <input id="dwItems" type="text" value="당첨 🍏, 꽝*3, 한 번 더 💚, 노래 신청권">
     </div>
     <div class="btnrow">
       <button class="gbtn" id="dwMake">제비 섞기 🎋</button>
@@ -241,7 +257,7 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
 
     <div class="dwgrid" id="dwGrid"></div>
     <div class="ldresult" id="dwOut"></div>
-    <div class="gtip">종이를 클릭하면 펼쳐져요 🍏</div>
+    <div class="gtip">종이를 클릭하면 펼쳐져요 · 예) <b>꽝*5, 당첨*1</b> → 총 6장 🍏</div>
   </div>
 
   <footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
@@ -420,268 +436,220 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
   });
 })();
 
-/* ── 🪜 사다리타기 (모요식: 사다리 숨김 → 캐릭터 주행 → 결과 공개) ── */
+/* ── 🪜 사다리타기 (모요 원본 이식) ── */
 (function(){
-  var PC = ['#5FAE91','#C79BD8','#7FA85A','#E8A6BC','#5FA8CF','#B08FD8','#E0846C','#8FA89B','#4E9C80','#D8A0C0'];
-  function AVS(){
-    var I = window.MINT_IMG || {};
-    return [ I.apple||'../apple.png', I.heartP||'../heart-purple.png', I.heartM||'../heart-mint.png',
-             I.appleHalf||'../apple-half.png', I.apple||'../apple.png', I.heartM||'../heart-mint.png',
-             I.heartP||'../heart-purple.png', I.appleHalf||'../apple-half.png',
-             I.apple||'../apple.png', I.heartM||'../heart-mint.png' ];
+  var PC=['#5FAE91','#C79BD8','#7FA85A','#E8A6BC','#5FA8CF','#B08FD8','#E0846C','#8FA89B','#4E9C80','#D8A0C0','#7FB08A','#C08FA8'];
+  var $=function(id){ return document.getElementById(id); };
+  function AV(){
+    var I=window.MINT_IMG||{};
+    var a=I.apple||'../apple.png', hp=I.heartP||'../heart-purple.png',
+        hm=I.heartM||'../heart-mint.png', ah=I.appleHalf||'../apple-half.png';
+    return [a,hp,hm,ah,a,hm,hp,ah,a,hm,a,hp];
   }
+  function gob(i){ var v=AV(); return v[i%v.length]; }
+  function cssVar(n){ return getComputedStyle(document.body).getPropertyValue(n).trim()||'#8CC7AE'; }
 
-  var $ = function(id){ return document.getElementById(id); };
-
-  /* 캐릭터 이미지 미리 로드 (drawImage 는 완전히 로드된 뒤에만 가능) */
-  var IMGCACHE = {};
-  function getImg(src){
-    if (IMGCACHE[src]) return IMGCACHE[src];
-    var im = new Image();
-    im.ready = false;
-    im.onload = function(){ im.ready = true; };
-    im.onerror = function(){ im.ready = false; };
-    im.src = src;
-    IMGCACHE[src] = im;
-    return im;
-  }
-  var N = 4, phase = 'setup', G = null, busy = false;
-  var cv = $('lgCanvas'), ctx = cv.getContext('2d');
-  var DEF = ['당첨 🍏','꽝','한 번 더 💚','꽝','꽝','꽝','꽝','꽝','꽝','꽝'];
-
-  function geom(){
-    var W = cv.clientWidth || 600;
-    var H = 440;
-    var pad = Math.max(46, W * 0.07);
-    var colW = N > 1 ? (W - pad*2) / (N - 1) : 0;
-    var rows = (G && G.rows) || 9;
-    var y0 = 12, y1 = H - 12, rowH = (y1 - y0) / (rows + 1);
-    return { W:W, H:H, pad:pad, colW:colW, y0:y0, y1:y1, rowH:rowH, rows:rows };
-  }
-  function colX(i){ var g = geom(); return g.pad + i * g.colW; }
-  function rowY(r){ var g = geom(); return g.y0 + g.rowH * (r + 1); }
-
-  function fit(){
-    var g = geom();
-    var dpr = window.devicePixelRatio || 1;
-    cv.width  = Math.round(g.W * dpr);
-    cv.height = Math.round(g.H * dpr);
-    cv.style.height = g.H + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  /* ── 셋업: 상단 캐릭터 + 하단 결과 입력칸 ── */
-  function renderSetup(){
-    var keep = Array.prototype.map.call(document.querySelectorAll('.lg-res input'), function(i){ return i.value; });
-    fit();
-    var tops = $('lg-tops'), bots = $('lg-bots'), av = AVS();
-    av.forEach(getImg);          /* 주행 전에 미리 로드 */
-    tops.innerHTML = ''; bots.innerHTML = '';
-    for (var i = 0; i < N; i++){
-      var b = document.createElement('button');
-      b.className = 'lg-av'; b.type = 'button'; b.id = 'lg-av-' + i;
-      b.style.left = colX(i) + 'px'; b.style.top = '4px'; b.style.borderColor = PC[i % PC.length];
-      var im = document.createElement('img'); im.src = av[i % av.length]; im.alt = '';
-      b.appendChild(im);
-      (function(idx){ b.addEventListener('click', function(){ run(idx); }); })(i);
-      tops.appendChild(b);
-
-      var w = document.createElement('div');
-      w.className = 'lg-res'; w.id = 'lg-res-' + i;
-      w.style.left = colX(i) + 'px'; w.style.top = '4px';
-      var inp = document.createElement('input');
-      inp.placeholder = '결과';
-      inp.value = (keep[i] !== undefined) ? keep[i] : (DEF[i] || '꽝');
-      w.appendChild(inp);
-      bots.appendChild(w);
-    }
-    draw();
-  }
-
-  /* ── 사다리 생성 ── */
-  function build(){
-    var inputs = Array.prototype.map.call(document.querySelectorAll('.lg-res input'), function(i){ return i.value.trim() || '꽝'; });
-    var rows = 9 + ((Math.random() * 3) | 0);
-    var rung = [];
-    for (var g = 0; g < N - 1; g++){
-      rung[g] = [];
-      for (var r = 0; r < rows; r++){
-        rung[g][r] = (Math.random() < 0.42 && !(g > 0 && rung[g-1][r]));
-      }
-    }
-    G = { n:N, rows:rows, rung:rung, results:inputs, done:[], paths:[] };
-    phase = 'ready'; busy = false;
-    /* 결과 감추기 */
-    Array.prototype.forEach.call(document.querySelectorAll('.lg-res input'), function(i){
-      i.dataset.val = i.value.trim() || '꽝';
-      i.value = '?';
-      i.disabled = true;
-    });
-    $('lg-minus').disabled = true; $('lg-plus').disabled = true;
-    $('lg-build').style.display = 'none';
-    $('lg-allbtn').style.display = '';
-    $('lg-reset').style.display = '';
-    $('lg-log').innerHTML = '';
-    fit(); draw();
-  }
-
-  function reset(){
-    phase = 'setup'; G = null; busy = false;
-    $('lg-minus').disabled = false; $('lg-plus').disabled = false;
-    $('lg-build').style.display = '';
-    $('lg-allbtn').style.display = 'none';
-    $('lg-reset').style.display = 'none';
-    $('lg-log').innerHTML = '';
-    /* '?' 로 가려뒀던 값을 원래대로 되돌림 */
-    Array.prototype.forEach.call(document.querySelectorAll('.lg-res input'), function(i){
-      if (i.dataset.val) i.value = i.dataset.val;
-      i.disabled = false;
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('.lg-av'), function(a){ a.classList.remove('done'); });
-    renderSetup();
-  }
-
-  /* ── 그리기 ── */
-  function draw(runner){
-    var g = geom();
-    var dark = document.body.classList.contains('dark');
-    ctx.clearRect(0, 0, g.W, g.H);
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-
-    /* 세로줄 */
-    ctx.strokeStyle = dark ? '#4E7A67' : '#B7DCC9';
-    ctx.lineWidth = 4;
-    for (var c = 0; c < N; c++){
-      ctx.beginPath(); ctx.moveTo(colX(c), g.y0); ctx.lineTo(colX(c), g.y1); ctx.stroke();
-    }
-    /* 가로줄 — 사다리 만들기 전엔 안 보임 */
-    if (G){
-      for (var k = 0; k < N - 1; k++){
-        for (var r = 0; r < G.rows; r++){
-          if (!G.rung[k][r]) continue;
-          ctx.beginPath(); ctx.moveTo(colX(k), rowY(r)); ctx.lineTo(colX(k+1), rowY(r)); ctx.stroke();
-        }
-      }
-      /* 이미 지나간 경로 */
-      G.paths.forEach(function(p){
-        ctx.strokeStyle = p.color; ctx.lineWidth = 5;
-        ctx.beginPath(); ctx.moveTo(p.pts[0].x, p.pts[0].y);
-        for (var i = 1; i < p.pts.length; i++) ctx.lineTo(p.pts[i].x, p.pts[i].y);
-        ctx.stroke();
-      });
-    }
-    /* 주행 중인 경로 + 캐릭터 */
-    if (runner){
-      ctx.strokeStyle = runner.color; ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.moveTo(runner.pts[0].x, runner.pts[0].y);
-      for (var j = 1; j <= runner.upto; j++) ctx.lineTo(runner.pts[j].x, runner.pts[j].y);
-      ctx.lineTo(runner.x, runner.y);
-      ctx.stroke();
-      var im = runner.img;
-      var drew = false;
-      if (im && im.ready && im.naturalWidth > 0){
-        try { ctx.drawImage(im, runner.x - 16, runner.y - 16, 32, 32); drew = true; } catch(e){}
-      }
-      if (!drew){
-        ctx.fillStyle = runner.color;
-        ctx.beginPath(); ctx.arc(runner.x, runner.y, 11, 0, Math.PI*2); ctx.fill();
-        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5; ctx.stroke();
-      }
-    }
-  }
-
-  /* ── 경로 계산 ── */
-  function pathOf(start){
-    var g = geom();
-    var c = start, pts = [{ x: colX(c), y: g.y0 }];
-    for (var r = 0; r < G.rows; r++){
-      if (c < N-1 && G.rung[c][r]){ pts.push({x:colX(c), y:rowY(r)}); c++; pts.push({x:colX(c), y:rowY(r)}); }
-      else if (c > 0 && G.rung[c-1][r]){ pts.push({x:colX(c), y:rowY(r)}); c--; pts.push({x:colX(c), y:rowY(r)}); }
-    }
-    pts.push({ x: colX(c), y: g.y1 });
-    return { pts: pts, end: c, color: PC[start % PC.length] };
-  }
-
-  /* ── 캐릭터 주행 애니메이션 ── */
-  function run(i){
-    if (!G || busy || phase !== 'ready') return;
-    if (G.done.indexOf(i) >= 0) return;
-    busy = true;
-
-    var p = pathOf(i);
-    var av = AVS();
-    var img = getImg(av[i % av.length]);
-
-    var runner = { pts: p.pts, upto: 0, x: p.pts[0].x, y: p.pts[0].y, color: p.color, img: img };
-    var seg = 0, t = 0;
-    var SPEED = 8;
-
-    function step(){
-      var a = runner.pts[seg], b = runner.pts[seg+1];
-      if (!b){ finish(); return; }
-      var dx = b.x - a.x, dy = b.y - a.y;
-      var len = Math.sqrt(dx*dx + dy*dy) || 1;
-      t += SPEED / len;
-      if (t >= 1){ t = 0; seg++; runner.upto = seg; runner.x = b.x; runner.y = b.y; }
-      else { runner.x = a.x + dx*t; runner.y = a.y + dy*t; }
-      draw(runner);
-      if (seg < runner.pts.length - 1) requestAnimationFrame(step);
-      else finish();
-    }
-
-    function finish(){
-      G.paths.push({ pts: p.pts, color: p.color });
-      G.done.push(i);
-      draw();
-      var inp = document.querySelector('#lg-res-' + p.end + ' input');
-      if (inp){ inp.value = inp.dataset.val; }
-      var avb = $('lg-av-' + i);
-      if (avb) avb.classList.add('done');
-      var res = (inp ? inp.dataset.val : '');
-      $('lg-log').innerHTML += ($('lg-log').innerHTML ? '<br>' : '') + (i+1) + '번 → ' + res;
-      if (window.iconizeEmoji) window.iconizeEmoji($('lg-log'));
-      if (window.iconizeEmoji && inp && inp.parentNode) window.iconizeEmoji(inp.parentNode);
-      busy = false;
-      if (G.done.length === N) $('lg-allbtn').style.display = 'none';
-    }
-    step();
-  }
-
-  function revealAll(){
-    if (!G || busy) return;
-    for (var i = 0; i < N; i++){
-      if (G.done.indexOf(i) >= 0) continue;
-      var p = pathOf(i);
-      G.paths.push({ pts: p.pts, color: p.color });
-      G.done.push(i);
-      var inp = document.querySelector('#lg-res-' + p.end + ' input');
-      if (inp) inp.value = inp.dataset.val;
-      var avb = $('lg-av-' + i);
-      if (avb) avb.classList.add('done');
-      $('lg-log').innerHTML += ($('lg-log').innerHTML ? '<br>' : '') + (i+1) + '번 → ' + (inp ? inp.dataset.val : '');
-    }
-    draw();
-    if (window.iconizeEmoji){ window.iconizeEmoji($('lg-log')); window.iconizeEmoji($('lg-bots')); }
-    $('lg-allbtn').style.display = 'none';
-  }
+  var N=4, phase='setup', G=null, busy=false;
 
   function setN(d){
-    if (phase !== 'setup') return;
-    N = Math.min(10, Math.max(2, N + d));
-    $('lg-n').textContent = N;
+    if(phase!=='setup') return;
+    N=Math.min(10, Math.max(2, N+d)); $('lg-n').textContent=N; renderSetup();
+  }
+  function geom(){
+    var cv=$('lgCanvas'); var W=cv.clientWidth||600, H=440;
+    var minPad=Math.max(50, W*0.06);
+    var colW=Math.min(150, (W-minPad*2)/(N-1));
+    var pad=(W - colW*(N-1))/2;
+    var rows=(G&&G.rows)||9; var y0=10, y1=H-10, rowH=(y1-y0)/(rows+1);
+    return {W:W,H:H,pad:pad,colW:colW,y0:y0,y1:y1,rowH:rowH,rows:rows};
+  }
+  function renderSetup(){
+    var keep=Array.prototype.map.call(document.querySelectorAll('#lg-bots .lg-res input'), function(i){return i.value;});
+    var keepN=(G&&G.rawNames)? G.rawNames.slice()
+              : Array.prototype.map.call(document.querySelectorAll('#lg-tops .lg-name input'), function(i){return i.value;});
+    var g=geom();
+    $('lgCanvas').style.height='440px';
+    var tops=$('lg-tops'), bots=$('lg-bots');
+    tops.innerHTML=''; bots.innerHTML='';
+    for(var i=0;i<N;i++){
+      var a=document.createElement('button');
+      a.className='lg-av'; a.type='button'; a.id='lg-av-'+i;
+      a.innerHTML='<img src="'+gob(i)+'" alt="">';
+      a.style.left=(g.pad+i*g.colW)+'px'; a.style.top='2px'; a.style.borderColor=PC[i%12];
+      tops.appendChild(a);
+
+      var nw=document.createElement('div');
+      nw.className='lg-name'; nw.id='lg-name-'+i; nw.style.left=(g.pad+i*g.colW)+'px';
+      var ni=document.createElement('input');
+      ni.placeholder=(i+1)+'번'; ni.value=(keepN[i]!==undefined)? keepN[i] : '';
+      nw.appendChild(ni); tops.appendChild(nw);
+
+      var w=document.createElement('div');
+      w.className='lg-res'; w.style.left=(g.pad+i*g.colW)+'px'; w.style.top='2px'; w.id='lg-res-'+i;
+      var inp=document.createElement('input');
+      inp.placeholder='결과'; inp.value=(keep[i]!==undefined)? keep[i] : (i===0?'당첨 🍏':'꽝');
+      w.appendChild(inp); bots.appendChild(w);
+    }
+    drawBase();
+  }
+  function drawBase(){
+    var cv=$('lgCanvas'); var g=geom();
+    var dpr=window.devicePixelRatio||1;
+    cv.width=g.W*dpr; cv.height=g.H*dpr;
+    var c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0);
+    c.clearRect(0,0,g.W,g.H);
+    c.lineCap='round'; c.lineWidth=4; c.strokeStyle=cssVar('--main-dark'); c.globalAlpha=.85;
+    for(var i=0;i<N;i++){
+      var x=g.pad+i*g.colW;
+      c.beginPath(); c.moveTo(x,g.y0); c.lineTo(x,g.y1); c.stroke();
+    }
+    c.globalAlpha=1;
+  }
+  function startGame(){
+    if(phase!=='setup') return;
+    var rows=9+((Math.random()*3)|0);
+    var rung=[], g, r;
+    for(g=0; g<N-1; g++){
+      rung[g]=[];
+      for(r=0; r<rows; r++) rung[g][r] = (Math.random()<0.45 && !(g>0 && rung[g-1][r]));
+    }
+    for(g=0; g<N-1; g++){
+      var has=false;
+      for(r=0;r<rows;r++) if(rung[g][r]){ has=true; break; }
+      if(!has){
+        var rr=(Math.random()*rows)|0;
+        while(g>0 && rung[g-1][rr]) rr=(rr+1)%rows;
+        rung[g][rr]=true;
+      }
+    }
+    var results=Array.prototype.map.call(document.querySelectorAll('#lg-bots .lg-res input'), function(i){ return i.value.trim()||'꽝'; });
+    var rawNames=Array.prototype.map.call(document.querySelectorAll('#lg-tops .lg-name input'), function(i){ return i.value; });
+    var names=rawNames.map(function(v,i){ return v.trim()||((i+1)+'번'); });
+    G={rows:rows, rung:rung, results:results, names:names, rawNames:rawNames, done:new Array(N)};
+    for(var i=0;i<N;i++) G.done[i]=false;
+
+    for(i=0;i<N;i++){
+      var nw=$('lg-name-'+i); nw.innerHTML='';
+      var sp=document.createElement('span'); sp.className='nm'; sp.textContent=names[i]; sp.style.color=PC[i%12];
+      nw.appendChild(sp);
+    }
+    phase='play'; busy=false;
+    for(i=0;i<N;i++){
+      var w=$('lg-res-'+i); w.innerHTML='';
+      var m=document.createElement('span'); m.className='mask'; m.id='lg-mask-'+i; m.textContent=results[i];
+      w.appendChild(m);
+      var a=$('lg-av-'+i); a.classList.add('clickable');
+      (function(idx){ $('lg-av-'+idx).onclick=function(){ run(idx,false); }; })(i);
+    }
+    if(window.iconizeEmoji) window.iconizeEmoji($('lg-bots'));
+    $('lg-minus').disabled=true; $('lg-plus').disabled=true;
+    $('lg-start').style.display='none';
+    $('lg-reset').style.display=''; $('lg-all').style.display='';
+    $('lg-hint').textContent='캐릭터를 눌러보세요! 사다리는 숨겨져 있어서 어디로 갈지 몰라요 🍀';
+    drawBase();
+  }
+  function resetGame(){
+    phase='setup'; G=null; busy=false;
+    Array.prototype.forEach.call(document.querySelectorAll('.lg-runner'), function(e){ e.remove(); });
+    $('lg-minus').disabled=false; $('lg-plus').disabled=false;
+    $('lg-start').style.display='';
+    $('lg-reset').style.display='none'; $('lg-all').style.display='none';
+    $('lg-log').innerHTML='';
+    $('lg-hint').textContent='아래 칸에 결과를 적고 시작하기를 누르면, 사다리가 숨겨지고 캐릭터를 눌러 타고 내려가요 🍏';
     renderSetup();
+  }
+  function pathOf(start){
+    var g=geom();
+    var col=start; var pts=[[g.pad+col*g.colW, g.y0]];
+    for(var r=0;r<g.rows;r++){
+      var y=g.y0+g.rowH*(r+1);
+      pts.push([g.pad+col*g.colW, y]);
+      if(col<N-1 && G.rung[col][r]){ col++; pts.push([g.pad+col*g.colW, y]); }
+      else if(col>0 && G.rung[col-1][r]){ col--; pts.push([g.pad+col*g.colW, y]); }
+    }
+    pts.push([g.pad+col*g.colW, g.y1]);
+    return {pts:pts, end:col};
+  }
+  function strokePath(c,pts,upto,col){
+    c.strokeStyle=col; c.lineWidth=5.5; c.lineCap='round'; c.lineJoin='round';
+    c.beginPath(); c.moveTo(pts[0][0],pts[0][1]);
+    for(var k=1;k<=upto;k++) c.lineTo(pts[k][0],pts[k][1]);
+    c.stroke();
+  }
+  function finishRun(i,end,pts){
+    G.done[i]=true;
+    var av=$('lg-av-'+i);
+    av.classList.remove('clickable'); av.classList.add('done'); av.onclick=null;
+    var m=$('lg-mask-'+end);
+    m.textContent=G.results[end]; m.classList.add('open');
+    m.style.borderColor=PC[i%12]; m.style.color=PC[i%12];
+    var log=document.createElement('div');
+    log.innerHTML='<img src="'+gob(i)+'" alt=""> <b>'+G.names[i].replace(/</g,'&lt;')+'</b>  →  '+G.results[end].replace(/</g,'&lt;');
+    log.style.borderLeft='4.5px solid '+PC[i%12];
+    $('lg-log').appendChild(log);
+    if(window.iconizeEmoji){ window.iconizeEmoji(log); window.iconizeEmoji(m); }
+    if(typeof window.fxHearts==='function'){
+      var r=$('lgCanvas').getBoundingClientRect();
+      window.fxHearts(r.left+pts[pts.length-1][0], r.top+pts[pts.length-1][1], 8);
+    }
+  }
+  function run(i, instant){
+    if(phase!=='play' || !G || G.done[i] || busy) return;
+    var pe=pathOf(i), pts=pe.pts, end=pe.end;
+    var cv=$('lgCanvas'), c=cv.getContext('2d');
+    if(instant){ strokePath(c,pts,pts.length-1,PC[i%12]); finishRun(i,end,pts); return; }
+    busy=true;
+    var stage=$('lg-stage'), crect=cv.getBoundingClientRect(), srect=stage.getBoundingClientRect();
+    var ox=crect.left-srect.left, oy=crect.top-srect.top;
+    var runner=document.createElement('div');
+    runner.className='lg-runner'; runner.innerHTML='<img src="'+gob(i)+'" alt="">'; runner.style.borderColor=PC[i%12];
+    stage.appendChild(runner);
+    var seg=[0];
+    for(var k=1;k<pts.length;k++) seg[k]=seg[k-1]+Math.sqrt(Math.pow(pts[k][0]-pts[k-1][0],2)+Math.pow(pts[k][1]-pts[k-1][1],2));
+    var total=seg[seg.length-1], SPEED=470;
+    var t0=performance.now();
+    (function step(now){
+      var dist=Math.min(total, (now-t0)/1000*SPEED);
+      var k=1; while(k<seg.length && seg[k]<dist) k++;
+      var a=pts[k-1], b=pts[Math.min(k,pts.length-1)];
+      var segLen=(seg[k]-seg[k-1])||1, t=(dist-seg[k-1])/segLen;
+      var x=a[0]+(b[0]-a[0])*t, y=a[1]+(b[1]-a[1])*t;
+      drawBase();
+      for(var j=0;j<N;j++) if(G.done[j]){ var p=pathOf(j); strokePath(c,p.pts,p.pts.length-1,PC[j%12]); }
+      strokePath(c,pts,k-1,PC[i%12]);
+      c.strokeStyle=PC[i%12]; c.lineWidth=5.5;
+      c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(x,y); c.stroke();
+      runner.style.left=(ox+x)+'px'; runner.style.top=(oy+y)+'px';
+      if(dist<total) requestAnimationFrame(step);
+      else{ runner.remove(); busy=false; strokePath(c,pts,pts.length-1,PC[i%12]); finishRun(i,end,pts); }
+    })(performance.now());
+  }
+  function revealAll(){
+    if(phase!=='play'||!G||busy) return;
+    for(var i=0;i<N;i++) if(!G.done[i]) run(i,true);
+    $('lg-all').style.display='none';
+  }
+  function repaint(){
+    if(phase==='setup'){ renderSetup(); return; }
+    var g=geom();
+    for(var i=0;i<N;i++){
+      $('lg-av-'+i).style.left=(g.pad+i*g.colW)+'px';
+      $('lg-name-'+i).style.left=(g.pad+i*g.colW)+'px';
+      $('lg-res-'+i).style.left=(g.pad+i*g.colW)+'px';
+    }
+    drawBase();
+    var c=$('lgCanvas').getContext('2d');
+    for(var j=0;j<N;j++) if(G.done[j]){ var p=pathOf(j); strokePath(c,p.pts,p.pts.length-1,PC[j%12]); }
   }
 
   $('lg-minus').addEventListener('click', function(){ setN(-1); });
   $('lg-plus').addEventListener('click',  function(){ setN(1); });
-  $('lg-build').addEventListener('click', build);
-  $('lg-allbtn').addEventListener('click', revealAll);
-  $('lg-reset').addEventListener('click', reset);
-
-  var shown = false;
-  window.addEventListener('ladder-shown', function(){ if (!shown){ shown = true; } renderSetup(); });
-  window.addEventListener('resize', function(){ if (phase === 'setup') renderSetup(); else { fit(); draw(); } });
-  if (window.onMintImages) window.onMintImages(function(){ if (phase === 'setup') renderSetup(); });
+  $('lg-start').addEventListener('click', startGame);
+  $('lg-reset').addEventListener('click', resetGame);
+  $('lg-all').addEventListener('click', revealAll);
+  window.addEventListener('ladder-shown', function(){ if(!busy) repaint(); });
+  window.addEventListener('resize', function(){ if(!busy) repaint(); });
+  if(window.onMintImages) window.onMintImages(function(){ if(phase==='setup') renderSetup(); });
   renderSetup();
 })();
 
@@ -695,14 +663,33 @@ footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--
     return a;
   }
 
+  /* "꽝*3" → 꽝 3장. 숫자 없으면 1장. */
+  function expand(raw){
+    var list=[];
+    (raw||'').split(',').forEach(function(chunk){
+      var t=chunk.trim();
+      if(!t) return;
+      var m=t.match(/^(.*?)\s*[*xX×]\s*(\d+)$/);
+      if(m && m[1].trim()){
+        var label=m[1].trim();
+        var n=Math.min(60, Math.max(1, parseInt(m[2],10)||1));
+        for(var i=0;i<n;i++) list.push(label);
+      } else {
+        list.push(t);
+      }
+    });
+    return list;
+  }
+
   function build(){
-    var items=(itemsEl.value||'').split(',').map(function(x){return x.trim();}).filter(Boolean);
+    var items=expand(itemsEl.value);
     out.textContent='';
-    if(items.length<2){ out.textContent='항목을 2개 이상 적어주세요!'; return; }
+    if(items.length<2){ out.textContent='항목을 2개 이상 적어주세요! (예: 당첨 🍏, 꽝*3)'; return; }
     pool=shuffle(items.slice()); opened=0;
     grid.innerHTML = pool.map(function(_,i){
       return '<div class="dwpaper" data-i="'+i+'">🎋<br>' + (i+1) + '번</div>';
     }).join('');
+    out.textContent = '총 ' + pool.length + '장 · 종이를 눌러 뽑아보세요!';
     Array.prototype.forEach.call(grid.querySelectorAll('.dwpaper'), function(el){
       el.addEventListener('click', function(){
         if(el.classList.contains('open')) return;

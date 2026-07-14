@@ -129,16 +129,30 @@
 
   let viewers=[], types=[], counts=[];
 
+  let hideZero = true;   // 업보 0인 사람 숨김 (관리자에서 끌 수 있음)
+
   async function init(){
-    [viewers, types, counts] = await Promise.all([
+    let prof = [];
+    [viewers, types, counts, prof] = await Promise.all([
       fetchAll('viewers', { order:'sort_order', asc:true }),
       fetchAll('upbo_types', { order:'sort_order', asc:true }),
-      fetchAll('upbo_counts', { order:'id', asc:true })
+      fetchAll('upbo_counts', { order:'id', asc:true }),
+      fetchAll('profile')
     ]);
+    try {
+      const d = (prof && prof[0] && prof[0].data) ? prof[0].data : null;
+      if (d && d['upbo-hide-zero'] === 'off') hideZero = false;
+    } catch(e){}
+
     let latest = counts.reduce((m,c)=> c.updated_at && c.updated_at>m ? c.updated_at : m, '');
     document.getElementById('update-date').textContent = latest ? '갱신일: ' + latest.slice(0,10) : '';
-    render(viewers);
+    render(shown());
     enableIframeAutoHeight();
+  }
+
+  /* 화면에 보일 사람 = 업보 0 숨김 설정 반영 */
+  function shown(){
+    return hideZero ? viewers.filter(v => viewerTotal(v.id) > 0) : viewers;
   }
 
   function viewerTotal(vid){
@@ -147,7 +161,7 @@
 
   function render(list){
     const grid=document.getElementById('grid');
-    if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1"><div class="empty"><div class="empty-icon">⚡</div>시청자가 없어요</div></div>'; enableIframeAutoHeight(); return; }
+    if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1"><div class="empty"><div class="empty-icon">⚡</div>업보 있는 시청자가 없어요</div></div>'; enableIframeAutoHeight(); return; }
     grid.innerHTML = list.map(v=>{
       const av=soopAvatar(v.soop_id); const ini=(v.nickname||'?').charAt(0);
       const avHtml = av ? `<img class="viewer-av" src="${av}" onerror="this.outerHTML='<div class=\\'viewer-av-fb\\'>${ini}</div>'">` : `<div class="viewer-av-fb">${ini}</div>`;
@@ -194,7 +208,7 @@
 
   document.getElementById('search').addEventListener('input', e=>{
     const q=e.target.value.trim().toLowerCase();
-    render(viewers.filter(v=> (v.nickname||'').toLowerCase().includes(q) || (v.soop_id||'').toLowerCase().includes(q)));
+    render(shown().filter(v=> (v.nickname||'').toLowerCase().includes(q) || (v.soop_id||'').toLowerCase().includes(q)));
   });
 
   init();

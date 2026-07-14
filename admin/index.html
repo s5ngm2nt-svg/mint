@@ -145,7 +145,6 @@
       <div class="card-title">🏠 메인 페이지 편집</div>
       <div class="form-field"><label class="input-label">메인 큰 사진 URL (비우면 mint-main.jpg)</label><input class="input" id="f-main-art" type="url" placeholder="https://.../image.jpg"></div>
       <div class="form-field"><label class="input-label">메인 사진 아래 소개 문구 (줄바꿈=엔터)</label><textarea class="input" id="f-main-story" rows="3" placeholder='"목소리 1티어"&#10;개인 소속 · 여 · 버추얼 스트리머 | 팬 애칭 애플 🍏'></textarea></div>
-      <div class="form-field"><label class="input-label">다이어리 페이지 부제 문구</label><input class="input" id="f-diary-sub" type="text" placeholder="송민트의 방송 일기에요"></div>
       <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveLocalProfile()">저장 ♥</button></div>
     </div>
     <div class="card">
@@ -233,6 +232,18 @@
 
   <!-- 업보 탭 -->
   <div class="tab-panel" id="tab-work">
+    <div class="card">
+      <div class="card-title">⚙️ 업보 페이지 설정</div>
+      <div class="form-field">
+        <label class="input-label">업보 0개인 시청자 표시</label>
+        <select class="input" id="f-upbo-hide-zero">
+          <option value="on">숨기기 (기본 · 업보 있는 사람만 보임)</option>
+          <option value="off">전부 보이기</option>
+        </select>
+      </div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveLocalProfile()">저장 ♥</button></div>
+    </div>
+
     <style>
       .subtabs { display:flex; gap:6px; margin-bottom:14px; }
       .subtab { padding:9px 16px; border-radius:999px; border:1.5px solid var(--main-light); background:#fff; color:var(--text-soft); font-size:13px; font-weight:600; cursor:pointer; }
@@ -323,6 +334,15 @@
 
   <!-- 일기 탭 -->
   <div class="tab-panel" id="tab-diary">
+    <div class="card">
+      <div class="card-title">✏️ 다이어리 페이지 문구</div>
+      <div class="form-field">
+        <label class="input-label">제목 아래 부제 (예: 민트의 하루하루 💚)</label>
+        <input class="input" id="f-diary-sub" type="text" placeholder="송민트의 방송 일기에요">
+      </div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveLocalProfile()">저장 ♥</button></div>
+    </div>
+
     <div class="card">
       <div class="card-title">일기 추가</div>
       <div class="form-grid">
@@ -419,6 +439,7 @@
     'like1','like2','like3','like4','dislike1','dislike2','dislike3',
     'tmi-food','tmi-song','tmi-book','days',
     'profile-art','img-apple','img-apple-half','img-heart-p','img-heart-m','img-apple-note',
+    'upbo-hide-zero',
     'diary-sub',
     'link-soop','link-cafe','link-fancim'
   ];

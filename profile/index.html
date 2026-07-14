@@ -27,7 +27,7 @@ body{background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--text
 a{color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px}
 a:hover{opacity:.82}
 img{display:block;max-width:100%}
-.wrap{max-width:var(--page-width);margin:0 auto;padding:16px clamp(14px,3vw,32px) 70px;position:relative;opacity:0;transition:opacity .35s}
+.wrap{max-width:var(--page-width);margin:0 auto;padding:16px clamp(14px,3vw,32px) 70px;position:relative;z-index:1;opacity:0;transition:opacity .35s}
 body.ready .wrap{opacity:1}
 
 @keyframes fallDown{from{transform:translateY(-5vh) rotate(0)}to{transform:translateY(108vh) rotate(50deg)}}
@@ -35,7 +35,7 @@ body.ready .wrap{opacity:1}
 @keyframes wobB{0%,100%{transform:rotate(1.2deg) scale(1)}50%{transform:rotate(-1deg) scale(1.015,.99)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 
-#fallbox{position:fixed;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+#fallbox{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 #fallbox span{position:absolute;top:-40px;line-height:1;display:block}
 
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 2px;flex-wrap:wrap}
@@ -437,9 +437,9 @@ async function load(){
     var d = (rows&&rows[0]&&rows[0].data) ? rows[0].data : null;
     if(d){
       setText('info-name', d['info-name']);
-      if(d['profile-art']) document.getElementById('mainArt').src=d['profile-art'];
-      else if(d['avatar']) document.getElementById('mainArt').src=d['avatar'];
-      else if(d['soop-id']){ var s=d['soop-id']; document.getElementById('mainArt').src='https://profile.img.sooplive.co.kr/LOGO/'+s.slice(0,2)+'/'+s+'/'+s+'.jpg'; }
+      /* 사진: 관리자에 URL이 있을 때만 교체. 비우면 동봉된 mint-face.jpg 유지 */
+      var pa = (d['profile-art'] || '').trim() || (d['avatar'] || '').trim();
+      if(pa) document.getElementById('mainArt').src = pa;
       setText('info-debut', d['info-debut']);
       setText('info-birth', d['info-birth']);
       setText('info-mbti', d['info-mbti']);

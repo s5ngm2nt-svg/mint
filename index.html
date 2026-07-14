@@ -29,7 +29,7 @@ body{background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--text
 a{color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px}
 a:hover{opacity:.82}
 img{display:block;max-width:100%}
-.wrap{max-width:var(--page-width);margin:0 auto;padding:16px clamp(14px,3vw,32px) 70px;position:relative;opacity:0;transition:opacity .35s}
+.wrap{max-width:var(--page-width);margin:0 auto;padding:16px clamp(14px,3vw,32px) 70px;position:relative;z-index:1;opacity:0;transition:opacity .35s}
 body.ready .wrap{opacity:1}
 
 /* 애니 */
@@ -39,7 +39,7 @@ body.ready .wrap{opacity:1}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 
 /* 떨어지는 꾸밈 */
-#fallbox{position:fixed;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+#fallbox{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 #fallbox span{position:absolute;top:-40px;line-height:1;display:block}
 
 /* 톱바 */
@@ -326,13 +326,9 @@ async function load(){
     var d = (rows && rows[0] && rows[0].data) ? rows[0].data : null;
     if(d){
       setText('info-name', d['info-name']);
-      var art = d['main-art'];
+      /* 사진: 관리자에 URL이 있을 때만 교체. 비우면 동봉된 mint-main.jpg 유지 */
+      var art = (d['main-art'] || '').trim() || (d['avatar'] || '').trim();
       if(art){ document.getElementById('mainArt').src = art; }
-      else if(d['avatar']){ document.getElementById('mainArt').src = d['avatar']; }
-      else if(d['soop-id']){
-        var s=d['soop-id'];
-        document.getElementById('mainArt').src='https://profile.img.sooplive.co.kr/LOGO/'+s.slice(0,2)+'/'+s+'/'+s+'.jpg';
-      }
       setText('info-debut', d['info-debut']);
       setText('info-birth', d['info-birth']);
       if(d['main-story']){

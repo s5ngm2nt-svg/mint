@@ -29,6 +29,17 @@
       color:var(--text-mid); font-size:11.5px; line-height:1.75; }
     .hint-box code{ background:rgba(0,0,0,.06); padding:1px 5px; border-radius:4px; font-size:11px; }
     body.dark .hint-box{ background:#2B3E36; }
+      .counter .cmemo{ flex-basis:100%; width:100%; margin-top:7px; padding:7px 10px; border-radius:9px;
+      border:1.5px solid var(--main-light); background:var(--bg); color:var(--text);
+      font-size:12px; font-family:inherit; outline:none; box-sizing:border-box; }
+    .counter .cmemo:focus{ border-color:var(--main); }
+    .counter .cmemo::placeholder{ color:var(--text-soft); opacity:.75; }
+    .toast{ position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px);
+      background:var(--main-dark); color:#fff; font-family:inherit; font-size:14px; font-weight:700;
+      padding:12px 22px; border-radius:999px; box-shadow:0 10px 26px rgba(0,0,0,.22);
+      opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; z-index:9999;
+      max-width:88vw; text-align:center; }
+    .toast.on{ opacity:1; transform:translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -265,7 +276,7 @@
       .pick-item .pn { font-size:14px; font-weight:700; color:var(--text); }
       .pick-item .pi { font-size:11px; color:var(--text-soft); }
       .counter-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; }
-      .counter { display:flex; align-items:center; gap:6px; padding:10px 12px; background:#fff; border:1px solid var(--main-light); border-radius:12px; }
+      .counter { display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:10px 12px; background:#fff; border:1px solid var(--main-light); border-radius:12px; }
       .counter .cn { flex:1; font-size:13px; color:var(--text); }
       .counter .cn .evt { font-size:9px; color:#b07d18; background:#fff0d6; padding:1px 6px; border-radius:999px; margin-left:4px; }
       .cbtn { width:26px; height:26px; border-radius:50%; border:1.5px solid var(--main-light); background:#fff; color:var(--main-dark); font-weight:700; cursor:pointer; font-size:14px; line-height:1; }
@@ -448,6 +459,17 @@
     'link-soop','link-cafe','link-fancim'
   ];
 
+  /* 저장/삭제 알림 토스트 */
+  let toastTimer = null;
+  function showToast(msg){
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('on'), 2200);
+  }
+
   function tryLogin() {
     if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
       document.getElementById('loginOverlay').style.display = 'none';
@@ -608,12 +630,13 @@
         <div class="pi">${v.soop_id||'-'}</div>
       </div>`).join('');
   }
+  let editMemos = {};
   function openAssign(vid) {
     currentViewer = vid;
     const v = viewers.find(x=>x.id===vid);
     if (!v) return;
-    editCounts = {};
-    counts.filter(c=>c.viewer_id===vid).forEach(c=>{ editCounts[c.type_id]=c.count; });
+    editCounts = {}; editMemos = {};
+    counts.filter(c=>c.viewer_id===vid).forEach(c=>{ editCounts[c.type_id]=c.count; editMemos[c.type_id]=c.memo||''; });
     document.getElementById('assign-title').textContent = `${v.nickname} 업보 부여`;
     document.getElementById('assign-card').style.display = 'block';
     renderPick();
@@ -624,6 +647,9 @@
         <button class="cbtn" onclick="bump(${t.id},-1)">−</button>
         <span class="cval" id="cv-${t.id}">${editCounts[t.id]||0}</span>
         <button class="cbtn" onclick="bump(${t.id},1)">+</button>
+        <input class="cmemo" id="cm-${t.id}" type="text" placeholder="메모 (예: 7월 / 기다린만큼 더)"
+               value="${(editMemos[t.id]||'').replace(/"/g,'&quot;')}"
+               oninput="editMemos[${t.id}]=this.value">
       </div>`).join('');
   }
   function bump(tid, d) {
@@ -632,7 +658,9 @@
   }
   async function saveCounts() {
     if (!currentViewer) return;
-    const rows = types.map(t => ({ viewer_id: currentViewer, type_id: t.id, count: editCounts[t.id]||0, updated_at: new Date().toISOString() }));
+    const rows = types.map(t => ({ viewer_id: currentViewer, type_id: t.id, count: editCounts[t.id]||0,
+                                   memo: (editMemos[t.id]||'').trim() || null,
+                                   updated_at: new Date().toISOString() }));
     const { error } = await db.from('upbo_counts').upsert(rows, { onConflict: 'viewer_id,type_id' });
     if (error) { showToast('❌ 저장 실패: ' + error.message); return; }
     showToast('✅ 저장됐어요!');

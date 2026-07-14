@@ -52,7 +52,7 @@
       display:flex; align-items:center; gap:10px; padding:11px 14px; margin-bottom:7px;
       background:var(--main-light); border:1px solid var(--main-light); border-radius:12px;
     }
-    .upbo-row .nm { flex:1; font-size:14px; color:var(--text); font-weight:500; }
+    .upbo-row .nm { font-size:14px; color:var(--text); font-weight:500; }
     .upbo-row .ev { font-size:10px; font-weight:700; color:#b07d18; background:#fff0d6; padding:2px 8px; border-radius:999px; }
     .upbo-row .ct { font-size:13px; font-weight:800; color:var(--main-dark); background:#fff; border:1.5px solid var(--main-light); border-radius:999px; padding:3px 12px; min-width:42px; text-align:center; }
     .modal-empty { text-align:center; color:var(--text-soft); padding:30px; font-size:14px; }
@@ -62,6 +62,9 @@
     body.dark .modal { background: var(--card); }
     body.dark .upbo-row { background: #22262e; }
     body.dark .upbo-row .ct { background: var(--card); }
+      .upbo-row .tx { flex:1; min-width:0; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+    .upbo-row .mo { flex-basis:100%; font-size:12px; color:var(--text-soft); line-height:1.5; margin-top:2px;
+      word-break:break-word; font-weight:400; }
   </style>
 </head>
 <body>
@@ -185,12 +188,15 @@
       <div><div class="modal-nick">${esc(v.nickname)}</div>${v.soop_id?`<div class="modal-id">(${esc(v.soop_id)})</div>`:''}</div>
       <button class="modal-x" onclick="closeModal()">✕</button>`;
 
-    const myCounts = {};
-    counts.filter(c=>c.viewer_id===vid).forEach(c=>{ myCounts[c.type_id]=c.count; });
+    const myCounts = {}, myMemos = {};
+    counts.filter(c=>c.viewer_id===vid).forEach(c=>{ myCounts[c.type_id]=c.count; myMemos[c.type_id]=c.memo||''; });
     const rows = types.filter(t=>(myCounts[t.id]||0)>0).map(t=>`
       <div class="upbo-row">
-        <span class="nm">${esc(t.name)}</span>
-        ${t.category==='이벤트'?'<span class="ev">이벤트</span>':''}
+        <div class="tx">
+          <span class="nm">${esc(t.name)}</span>
+          ${t.category==='이벤트'?'<span class="ev">이벤트</span>':''}
+          ${myMemos[t.id] ? `<div class="mo">${esc(myMemos[t.id])}</div>` : ''}
+        </div>
         <span class="ct">×${myCounts[t.id]}</span>
       </div>`).join('');
     document.getElementById('modal-body').innerHTML = rows || '<div class="modal-empty">아직 업보가 없어요 ♡</div>';

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프로필 · 송민트</title>
+<meta property="og:title" content="프로필 · 송민트">
+<link rel="icon" type="image/jpeg" href="https://profile.img.sooplive.co.kr/LOGO/ad/ad8hv5jk7d6/ad8hv5jk7d6.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --main:#8CC7AE; --main-dark:#3E8E7E; --main-light:#EAFBF6; --bg:#EAFBF6; --card:#FCFCFC;
+  --logo:#3E8E7E; --accent:#3E8E7E; --apple:#5E8A4E; --apple-l:#B5DFA0;
+  --text:#3D5148; --ink:#37554A; --text-soft:#7C9489; --line:#DCEDE4;
+  --tape-m:rgba(158,212,191,.72); --tape-g:rgba(181,223,160,.72); --tape-b:rgba(190,225,245,.72); --tape-y:rgba(255,224,178,.8);
+  --page-width:1180px;
+}
+body.dark{
+  --main:#8CC7AE; --main-dark:#8FD6BC; --main-light:#22332C; --bg:#182320; --card:#22322C;
+  --logo:#9EE0C4; --accent:#9EE0C4; --apple:#B5DFA0; --apple-l:#7FA05A;
+  --text:#DFEEE7; --ink:#EAF6F0; --text-soft:#9DB5AA; --line:#33463D;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;transition:background-color .25s,color .25s}
+a{color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{opacity:.82}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--page-width);margin:0 auto;padding:16px clamp(14px,3vw,32px) 70px;position:relative;opacity:0;transition:opacity .35s}
+body.ready .wrap{opacity:1}
+
+@keyframes fallDown{from{transform:translateY(-5vh) rotate(0)}to{transform:translateY(108vh) rotate(50deg)}}
+@keyframes wobA{0%,100%{transform:rotate(-1.2deg) scale(1)}50%{transform:rotate(1deg) scale(1.015,.99)}}
+@keyframes wobB{0%,100%{transform:rotate(1.2deg) scale(1)}50%{transform:rotate(-1deg) scale(1.015,.99)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+#fallbox{position:fixed;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+#fallbox span{position:absolute;top:-40px;line-height:1;display:block}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 2px;flex-wrap:wrap}
+.topbar .spacer{flex:1}
+.tbtn{font-family:'Gaegu',cursive;font-weight:700;font-size:17px;cursor:pointer;border:2px solid var(--main);background:var(--card);color:var(--main-dark);padding:6px 16px;border-radius:16px 6px 16px 6px}
+.darkbtn{width:22px;height:33px;border-radius:12px;border:2px solid var(--main);background:var(--card);cursor:pointer;position:relative;padding:0}
+.darkbtn i{position:absolute;left:50%;top:3px;transform:translateX(-50%);font-style:normal;font-size:11px;transition:top .2s}
+body.dark .darkbtn i{top:16px}
+
+header.logo-h{text-align:center;padding:22px 0 6px}
+header.logo-h .lg{display:inline-block;background:var(--card);border-radius:999px;padding:10px 28px;box-shadow:0 4px 14px rgba(62,142,126,.14);transform:rotate(-1.5deg)}
+header.logo-h .lg span{font-family:'Gaegu',cursive;font-weight:700;font-size:24px;color:var(--accent)}
+
+nav.tape-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 8px;padding:18px 0 30px}
+nav.tape-nav a{font-family:'Gaegu',cursive;font-weight:700;font-size:20px;text-decoration:none;color:var(--ink);padding:8px 24px;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 5px rgba(62,142,126,.2);transition:transform .15s}
+nav.tape-nav a:hover{transform:translateY(-2px) rotate(0)!important;opacity:1}
+nav.tape-nav a:nth-child(9n+1){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(9n+2){transform:rotate(1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(9n+3){transform:rotate(-1deg);background-color:var(--tape-b)}
+nav.tape-nav a:nth-child(9n+4){transform:rotate(2deg);background-color:var(--tape-y)}
+nav.tape-nav a:nth-child(9n+5){transform:rotate(-1.5deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(9n+6){transform:rotate(1deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(9n+7){transform:rotate(-1deg);background-color:var(--tape-b)}
+nav.tape-nav a:nth-child(9n+8){transform:rotate(1.5deg);background-color:var(--tape-y)}
+nav.tape-nav a:nth-child(9n+9){transform:rotate(-2deg);background-color:var(--tape-m)}
+nav.tape-nav a.active{box-shadow:0 0 0 2.5px var(--main-dark),0 2px 5px rgba(62,142,126,.2);color:var(--main-dark)}
+nav.tape-nav a:nth-child(3){transform:rotate(-1deg);background-color:var(--tape-b)}
+nav.tape-nav a:nth-child(4){transform:rotate(2deg);background-color:var(--tape-m)}
+nav.tape-nav a:nth-child(5){transform:rotate(-1.5deg);background-color:var(--tape-g)}
+nav.tape-nav a:nth-child(6){transform:rotate(1deg);background-color:var(--tape-b)}
+nav.tape-nav a:nth-child(7){transform:rotate(-1deg);background-color:var(--tape-y)}
+nav.tape-nav a:nth-child(8){transform:rotate(1.5deg);background-color:var(--tape-m)}
+
+.tape{position:absolute;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 8px,transparent 8px 16px);box-shadow:0 2px 4px rgba(0,0,0,.08);z-index:3}
+
+/* 히어로 */
+.hero{display:flex;flex-wrap:wrap;gap:30px;align-items:stretch;justify-content:center}
+figure.polaroid{flex:1 1 420px;min-width:290px;max-width:520px;margin:0;position:relative;transform:rotate(-1.5deg);z-index:2}
+figure.polaroid .frame{background:#fff;padding:clamp(12px,2vw,18px);padding-bottom:0;border-radius:8px;box-shadow:0 14px 36px rgba(62,142,126,.22);position:relative}
+body.dark figure.polaroid .frame{background:#F2F7F4}
+figure.polaroid img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 12%;border-radius:4px}
+figure.polaroid figcaption{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:6px 14px;padding:12px 6px 16px}
+figure.polaroid .nm{font-family:'Gaegu',cursive;font-weight:700;font-size:clamp(34px,4.4vw,48px);color:#37554A;letter-spacing:2px}
+figure.polaroid .en{font-family:'Gaegu',cursive;font-size:clamp(18px,2.2vw,22px);color:var(--accent)}
+figure.polaroid .dood{position:absolute;pointer-events:none}
+.heroside{flex:1 1 340px;min-width:280px;display:flex;flex-direction:column;gap:20px;justify-content:center}
+.greet{font-family:'Gaegu',cursive;font-weight:700;font-size:clamp(28px,3.4vw,38px);color:var(--ink);line-height:1.5;text-align:center}
+.greet b{color:var(--accent)}
+
+/* 메모 카드 공통 */
+.memo{background:var(--card);box-shadow:0 8px 20px rgba(62,142,126,.16);padding:20px 22px;position:relative}
+.memo.a{border-radius:4px 14px 6px 16px}
+.memo.b{border-radius:14px 5px 16px 6px}
+.memo.wob1{animation:wobB 4.2s ease-in-out infinite}
+.memo.wob2{animation:wobA 4.7s ease-in-out infinite}
+.memo h2{font-family:'Jua',sans-serif;font-size:21px;color:var(--ink);margin:2px 0 12px}
+.memo ul{list-style:none;font-family:'Gaegu',cursive;font-size:19px;line-height:1.8;color:var(--text)}
+.memo ul strong{color:var(--ink)}
+.dday-stamp{position:absolute;right:-26px;bottom:-30px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:140px;height:122px;background:var(--img-apple-note, url('../apple-note.png')) center/contain no-repeat;transform:rotate(5deg);padding-top:10px}
+.dday-stamp .l{font-family:'Gaegu',cursive;font-weight:700;font-size:14px;color:var(--apple);white-space:nowrap}
+.dday-stamp .v{font-family:'Jua',sans-serif;font-size:24px;color:var(--apple)}
+
+/* 섹션 */
+.sect{margin-top:54px}
+.sect > h2{font-family:'Jua',sans-serif;font-size:25px;color:var(--ink);text-align:center;margin-bottom:6px}
+.sect > .sub{text-align:center;font-family:'Gaegu',cursive;font-size:18px;color:var(--text-soft);margin-bottom:22px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+
+/* 좋아/싫어 */
+.chips span{display:inline-block;font-family:'Gaegu',cursive;font-weight:700;font-size:17px;padding:6px 15px;border-radius:16px;margin:4px 4px 0 0;background:#EAF4D8;color:var(--apple)}
+.chips span.h{background:#F6E4EC;color:#C77B9B}
+body.dark .chips span{background:#2C4230}
+body.dark .chips span.h{background:#42303A;color:#E3A6BF}
+
+/* 능력치 */
+.stat{display:flex;align-items:center;gap:12px;font-family:'Gaegu',cursive;font-size:18px;padding:6px 0}
+.stat .n{min-width:74px;color:var(--text-soft)}
+.stat .bar{flex:1;height:14px;border-radius:10px;background:var(--line);overflow:hidden}
+.stat .bar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--main),var(--apple-l))}
+
+/* 일정 요일 */
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center}
+.days .d{background:var(--card);border-radius:10px 4px 12px 5px;padding:12px 4px;box-shadow:0 6px 14px rgba(62,142,126,.14)}
+.days .d .w{font-family:'Jua',sans-serif;font-size:17px;color:var(--ink)}
+.days .d .s{font-family:'Gaegu',cursive;font-size:15px;color:var(--text-soft);margin-top:3px}
+.days .d.on{background:#EAF4D8;box-shadow:0 6px 14px rgba(94,138,78,.2)}
+.days .d.on .s{color:var(--apple);font-weight:700}
+body.dark .days .d.on{background:#2C4230}
+
+/* VOD */
+#ovod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+#ovod-grid .vod{background:var(--card);border-radius:12px 5px 14px 6px;padding:10px;box-shadow:0 8px 20px rgba(62,142,126,.16)}
+#ovod-grid .vod .ph{aspect-ratio:16/9;border-radius:6px;background:linear-gradient(140deg,#DCF0E5,#EAF6D5);display:flex;align-items:center;justify-content:center;font-size:32px;color:#fff}
+#ovod-grid .vod iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:6px;display:block}
+#ovod-grid .vod .t{font-family:'Gaegu',cursive;font-weight:700;font-size:18px;color:var(--ink);padding:8px 4px 2px;text-align:center}
+
+/* 링크 */
+.links{margin-top:54px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center}
+.links h2{font-family:'Jua',sans-serif;font-size:22px;color:var(--ink);transform:rotate(-1deg);width:100%;text-align:center;margin:0 0 4px}
+.links a{font-family:'Gaegu',cursive;font-weight:700;font-size:21px;text-decoration:none;text-align:center;background:var(--card);border:2.5px solid var(--main);border-radius:22px 8px 20px 9px;padding:14px 26px;transform:rotate(-1.5deg);box-shadow:0 6px 14px rgba(62,142,126,.14);color:var(--main-dark)}
+.links a.g{color:var(--apple);background:#F0FAE6;border-color:var(--apple-l);border-radius:9px 21px 8px 22px;transform:rotate(1.4deg)}
+.links a.g2{color:var(--apple);background:#F0FAE6;border-color:var(--apple-l);border-radius:20px 9px 22px 8px;transform:rotate(-1deg)}
+body.dark .links a.g,body.dark .links a.g2{background:#28402C}
+.links a:hover{transform:translateY(-2px) rotate(0)!important}
+
+
+/* 이모지 → 이미지 아이콘 치환 */
+.e-ico{display:inline-block;width:1.05em;height:1.05em;vertical-align:-0.18em;background-size:contain;background-repeat:no-repeat;background-position:center;margin:0 .04em}
+footer{text-align:center;font-family:'Gaegu',cursive;font-size:17px;color:var(--text-soft);padding:44px 0 0;line-height:1.8}
+
+/* 문의 모달 */
+#askWrap{position:fixed;inset:0;background:rgba(40,60,52,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+#askWrap.on{display:flex}
+#askWrap .box{background:var(--card);border-radius:18px 6px 18px 6px;padding:26px 28px;width:min(460px,100%);box-shadow:0 20px 44px rgba(0,0,0,.22)}
+#askWrap h3{font-family:'Jua',sans-serif;font-size:22px;color:var(--ink);margin-bottom:12px}
+#askWrap textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:10px;padding:12px;font-family:'Noto Sans KR';font-size:15px;resize:vertical;background:var(--bg);color:var(--text)}
+#askWrap .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+#askWrap button{font-family:'Gaegu',cursive;font-weight:700;font-size:18px;cursor:pointer;border:none;padding:9px 22px;border-radius:14px}
+#askWrap .send{background:var(--main);color:#fff}
+#askWrap .close{background:var(--line);color:var(--ink)}
+#askMsg{font-family:'Gaegu',cursive;font-size:17px;color:var(--apple);margin-top:8px;min-height:22px}
+
+@media (max-width:760px){ .grid2{grid-template-columns:1fr} .days{grid-template-columns:repeat(4,1fr)} }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');</script>
+
+<div id="fallbox" aria-hidden="true"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="spacer"></span>
+    <button class="tbtn" onclick="openAsk()">✉ 문의</button>
+    <button class="darkbtn" id="darkBtn" aria-label="다크모드"><i id="darkIcon">🌙</i></button>
+  </div>
+
+  <header class="logo-h">
+    <span class="lg"><span>🍏 song mint's profile 💚</span></span>
+  </header>
+
+  <nav class="tape-nav" aria-label="메뉴">
+    <a href="../">메인</a>
+    <a href="../profile/" class="active">프로필</a>
+    <a href="../notice/">공지</a>
+    <a href="../schedule/">일정</a>
+    <a href="../work/">업보</a>
+    <a href="../diary/">다이어리</a>
+    <a href="../song/">노래책</a>
+    <a href="../dress/">옷장</a>
+    <a href="../game/">미니게임</a>
+  </nav>
+
+  <!-- 히어로 -->
+  <div class="hero">
+    <figure class="polaroid" id="avatarWrap">
+      <div class="frame">
+        <span class="tape" style="top:-15px;left:10%;width:120px;height:32px;transform:rotate(-5deg);background-color:var(--tape-m)"></span>
+        <span class="tape" style="top:-13px;right:11%;width:100px;height:28px;transform:rotate(4deg);background-color:var(--tape-g)"></span>
+        <img class="avatar" id="mainArt" src="../mint-face.jpg" referrerpolicy="no-referrer" alt="송민트">
+        <figcaption>
+          <span class="nm" id="info-name">송민트</span>
+          <span class="en">SONG MINT ⊹₊⟡</span>
+        </figcaption>
+      </div>
+      <span class="dood" style="bottom:-14px;right:-8px;font-size:36px;transform:rotate(12deg)">🍏</span>
+      <span class="dood" style="top:34%;left:-18px;font-size:28px;transform:rotate(-14deg)">💚</span>
+    </figure>
+
+    <div class="heroside">
+      <div class="greet" id="head-sub">안농! 나 목소리 1티어 <b>송민트</b> 💚</div>
+
+      <div class="memo a wob1">
+        <span class="tape" style="top:-12px;left:50%;width:92px;height:26px;transform:translateX(-50%) rotate(-3deg);background-color:var(--tape-m)"></span>
+        <h2>memo 📎 프로필</h2>
+        <ul>
+          <li>· 데뷔 <strong id="info-debut">2026.01.03</strong></li>
+          <li>· 생일 <strong id="info-birth">6.26</strong> 🎂</li>
+          <li>· 소속 <strong>개인</strong> · 성별 <strong>여</strong></li>
+          <li>· 특징 <strong id="info-mbti">E쁨</strong></li>
+          <li>· 팬 애칭 <strong id="info-fandom">애플이</strong> 🍏</li>
+        </ul>
+        <div class="dday-stamp"><span class="l">생일까지</span><span class="v" id="dday">D-?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 특징 · 한마디 -->
+  <section class="sect">
+    <h2>민트는 이런 사람 ⊹₊⟡</h2>
+    <div class="grid2">
+      <div class="memo b wob2">
+        <span class="tape" style="top:-12px;left:30px;width:88px;height:24px;transform:rotate(-4deg);background-color:var(--tape-g)"></span>
+        <h2>특징 🌿</h2>
+        <ul>
+          <li>· 눈은 오드아이 💜💚</li>
+          <li>· 볼에 점 두 개 🍏..</li>
+          <li>· 뾰족한 송곳니 보유</li>
+          <li>· 소통 · 노래 · 게임 방송</li>
+        </ul>
+      </div>
+      <div class="memo a wob1">
+        <span class="tape" style="top:-12px;right:30px;width:88px;height:24px;transform:rotate(4deg);background-color:var(--tape-b)"></span>
+        <h2>한마디 💬</h2>
+        <ul>
+          <li id="quote">· "야르하게 부탁드립니다 💚"</li>
+          <li id="msg">· 인디 · 포크 감성으로 조곤조곤 불러요 🎵</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 좋아 / 싫어 -->
+  <section class="sect">
+    <h2>좋아 · 싫어 💚</h2>
+    <div class="grid2">
+      <div class="memo a wob2">
+        <h2>좋아하는 것 🍏</h2>
+        <div class="chips">
+          <span id="like1">너 💚</span><span id="like2">인디 · 포크</span><span id="like3">아이유 · 볼빨간사춘기</span><span id="like4">풋사과 🍏</span>
+        </div>
+      </div>
+      <div class="memo b wob1">
+        <h2>싫어하는 것 🙅</h2>
+        <div class="chips">
+          <span class="h" id="dislike1">밤티</span><span class="h" id="dislike2">팝송 (영어 못함 이슈)</span><span class="h" id="dislike3">많음…</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TMI · 능력치 -->
+  <section class="sect">
+    <h2>TMI · 능력치 ✦</h2>
+    <div class="grid2">
+      <div class="memo b wob1">
+        <h2>TMI 📎</h2>
+        <ul>
+          <li>· 최애 음식 — <strong id="tmi-food">사과 🍏</strong></li>
+          <li>· 애창곡 — <strong id="tmi-song">아이유 · 볼빨간사춘기</strong></li>
+          <li>· 최애 장르 — <strong id="tmi-book">인디 · 포크</strong></li>
+        </ul>
+      </div>
+      <div class="memo a wob2">
+        <h2>능력치 ✦</h2>
+        <div class="stat"><span class="n">목소리</span><span class="bar"><i style="width:98%"></i></span></div>
+        <div class="stat"><span class="n">소통</span><span class="bar"><i style="width:92%"></i></span></div>
+        <div class="stat"><span class="n">노래</span><span class="bar"><i style="width:85%"></i></span></div>
+        <div class="stat"><span class="n">게임</span><span class="bar"><i style="width:70%"></i></span></div>
+        <div class="stat"><span class="n">발랄함</span><span class="bar"><i style="width:95%"></i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 방송 시간 -->
+  <section class="sect">
+    <h2>방송 시간 🕰️</h2>
+    <div class="sub">평일 1부 10:30–14:30 · 2부 19:00–24:00 / 주말 15:00–21:00 (변동 가능!)</div>
+    <div class="days" id="days-row">
+      <div class="d" id="day-0"><div class="w">일</div><div class="s">-</div></div>
+      <div class="d" id="day-1"><div class="w">월</div><div class="s">-</div></div>
+      <div class="d" id="day-2"><div class="w">화</div><div class="s">-</div></div>
+      <div class="d" id="day-3"><div class="w">수</div><div class="s">-</div></div>
+      <div class="d" id="day-4"><div class="w">목</div><div class="s">-</div></div>
+      <div class="d" id="day-5"><div class="w">금</div><div class="s">-</div></div>
+      <div class="d" id="day-6"><div class="w">토</div><div class="s">-</div></div>
+    </div>
+    <div style="text-align:center;margin-top:16px"><a href="../schedule/" style="font-family:'Gaegu',cursive;font-weight:700;font-size:17px">일정 페이지 →</a></div>
+  </section>
+
+  <!-- 다시보기 -->
+  <section class="sect" id="songs-card">
+    <h2>다시보기 📺</h2>
+    <div class="sub">지난 방송, 다시 보고 싶을 때</div>
+    <div id="ovod-grid">
+      <div class="vod"><div class="ph">▶</div><div class="t">다시보기 준비 중</div></div>
+      <div class="vod"><div class="ph">▶</div><div class="t">다시보기 준비 중</div></div>
+      <div class="vod"><div class="ph">▶</div><div class="t">다시보기 준비 중</div></div>
+    </div>
+  </section>
+
+  <!-- 링크 -->
+  <section class="links">
+    <h2>민트 만나러 가기 ↓</h2>
+    <a id="link-soop" href="https://www.sooplive.com/station/ad8hv5jk7d6" target="_blank" rel="noopener">📺 SOOP 방송국</a>
+    <a class="g" id="link-cafe" href="https://cafe.naver.com/applemintfarm" target="_blank" rel="noopener">🍏 팬카페 · 애플민트농장</a>
+    <a class="g2" id="link-fancim" href="https://fancim.me/mypage/myfancim.aspx" target="_blank" rel="noopener">💚 팬심</a>
+  </section>
+
+  <footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
+</div>
+
+<div id="askWrap" role="dialog" aria-modal="true">
+  <div class="box">
+    <h3>✉ 민트에게 문의하기</h3>
+    <textarea id="askText" placeholder="내용을 적어주세요 :)"></textarea>
+    <div id="askMsg"></div>
+    <div class="row">
+      <button class="close" onclick="closeAsk()">닫기</button>
+      <button class="send" onclick="sendAsk()">보내기 💚</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase.js"></script>
+<script>window.ASSET_ROOT='../'; window.ICON_ROOT='../';</script>
+<script src="../assets.js"></script>
+<script src="../icons.js"></script>
+<script>
+/* 다크모드 */
+(function(){
+  var b=document.getElementById('darkBtn'), i=document.getElementById('darkIcon');
+  function sync(){ i.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; }
+  sync();
+  b.addEventListener('click',function(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark')?'dark':'light');
+    sync();
+  });
+})();
+
+/* 떨어지는 꾸밈 */
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var box=document.getElementById('fallbox');
+  var DEF=['../apple.png','../heart-purple.png','../heart-mint.png','../apple-half.png'];
+  function paint(){
+    var I=window.MINT_IMG||{};
+    var kinds=[I.apple,I.heartP,I.heartM,I.appleHalf].filter(Boolean);
+    if(!kinds.length) kinds=DEF;
+    box.innerHTML='';
+    for(var i=0;i<14;i++){
+      var s=document.createElement('span');
+      s.style.backgroundImage="url('"+kinds[i%kinds.length]+"')";
+      s.style.backgroundSize='contain';
+      s.style.backgroundRepeat='no-repeat';
+      var sz=Math.round(18+Math.random()*16);
+      s.style.width=sz+'px'; s.style.height=sz+'px';
+      s.style.left=(2+Math.random()*94).toFixed(1)+'%';
+      s.style.opacity=(0.45+Math.random()*0.35).toFixed(2);
+      s.style.animation='fallDown '+(9+Math.random()*9).toFixed(1)+'s linear '+(-Math.random()*18).toFixed(1)+'s infinite';
+      box.appendChild(s);
+    }
+  }
+  if(window.onMintImages) window.onMintImages(paint);
+  else { paint(); (window.__mintPending = window.__mintPending || []).push(paint); }
+})();
+
+/* 문의 */
+function openAsk(){ document.getElementById('askWrap').classList.add('on'); }
+function closeAsk(){ document.getElementById('askWrap').classList.remove('on'); document.getElementById('askMsg').textContent=''; }
+async function sendAsk(){
+  var t=document.getElementById('askText'), m=document.getElementById('askMsg');
+  var v=(t.value||'').trim();
+  if(!v){ m.textContent='내용을 적어주세요!'; return; }
+  m.textContent='보내는 중...';
+  try{ await insertRow('inquiries',{message:v}); m.textContent='보냈어요! 고마워요 💚'; t.value=''; setTimeout(closeAsk,1200); }
+  catch(e){ m.textContent='전송 실패… 잠시 후 다시 시도해 주세요.'; }
+}
+
+/* D-Day */
+function ddayFrom(mmdd){
+  if(!mmdd) return null;
+  var p=String(mmdd).replace(/[^0-9]/g,'-').split('-').filter(Boolean);
+  if(p.length<2) return null;
+  var mo=+p[p.length-2], da=+p[p.length-1];
+  var n=new Date(), t=new Date(n.getFullYear(),n.getMonth(),n.getDate());
+  var b=new Date(t.getFullYear(),mo-1,da);
+  if(b<t) b=new Date(t.getFullYear()+1,mo-1,da);
+  return Math.round((b-t)/86400000);
+}
+function paintDday(mmdd){
+  var n=ddayFrom(mmdd||'06-26'), el=document.getElementById('dday');
+  if(el) el.textContent=(n===0?'D-DAY!':(n===null?'D-?':'D-'+n));
+}
+paintDday('06-26');
+
+/* 요일 (기본: 수~월 방송, 화 휴방) */
+function paintDays(csv){
+  var on = (csv||'0,1,3,4,5,6').split(',').map(function(x){return x.trim();});
+  for(var i=0;i<7;i++){
+    var d=document.getElementById('day-'+i); if(!d) continue;
+    var s=d.querySelector('.s'), isOn = on.indexOf(String(i))>=0;
+    d.classList.toggle('on', isOn);
+    s.textContent = isOn ? '방송' : '휴방';
+  }
+}
+paintDays();
+
+/* DB 로더 */
+function setText(id,v){ var el=document.getElementById(id); if(el&&v) el.textContent=v; }
+function setHref(id,v){ var el=document.getElementById(id); if(el&&v) el.href=v; }
+
+async function load(){
+  try{
+    var rows = await fetchAll('profile');
+    var d = (rows&&rows[0]&&rows[0].data) ? rows[0].data : null;
+    if(d){
+      setText('info-name', d['info-name']);
+      if(d['profile-art']) document.getElementById('mainArt').src=d['profile-art'];
+      else if(d['avatar']) document.getElementById('mainArt').src=d['avatar'];
+      else if(d['soop-id']){ var s=d['soop-id']; document.getElementById('mainArt').src='https://profile.img.sooplive.co.kr/LOGO/'+s.slice(0,2)+'/'+s+'/'+s+'.jpg'; }
+      setText('info-debut', d['info-debut']);
+      setText('info-birth', d['info-birth']);
+      setText('info-mbti', d['info-mbti']);
+      setText('info-fandom', d['info-fandom']);
+      if(d['head-sub']) document.getElementById('head-sub').innerHTML=String(d['head-sub']).split('\n').join('<br>');
+      setText('quote', d['quote']);
+      setText('msg', d['msg']);
+      ['like1','like2','like3','like4','dislike1','dislike2','dislike3','tmi-food','tmi-song','tmi-book'].forEach(function(k){ setText(k, d[k]); });
+      setHref('link-soop', d['link-soop']);
+      setHref('link-cafe', d['link-cafe']);
+      setHref('link-fancim', d['link-fancim']);
+      paintDday(d['info-birth']||'06-26');
+      if(d['days']) paintDays(d['days']);
+    }
+  }catch(e){}
+
+  try{
+    var vods = await fetchAll('original_songs');
+    if(vods && vods.length){
+      document.getElementById('ovod-grid').innerHTML = vods.map(function(v){
+        return '<div class="vod"><iframe src="https://vod.sooplive.co.kr/player/'+v.vod_id+'/embed" allowfullscreen loading="lazy"></iframe><div class="t">'+(v.title||'다시보기')+'</div></div>';
+      }).join('');
+    }
+  }catch(e){}
+
+  if(window.iconizeEmoji) window.iconizeEmoji(document.body);
+  document.body.classList.add('ready');
+}
+load();
+setTimeout(function(){ document.body.classList.add('ready'); }, 1600);
+
+</script>
+<script src="../fx.js"></script>
+</body>
+</html>

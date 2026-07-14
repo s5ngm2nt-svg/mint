@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>송민트 · 업보</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/jpeg" href="https://profile.img.sooplive.co.kr/LOGO/ad/ad8hv5jk7d6/ad8hv5jk7d6.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .upbo-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:6px; }
+    .upbo-eyebrow { font-size:12px; letter-spacing:3px; color:var(--main); font-weight:700; }
+    .upbo-title { font-size:26px; font-weight:800; color:var(--main-dark); }
+    .upbo-update { font-size:12px; color:var(--text-soft); background:#fff; border:1px solid var(--main-light); padding:6px 14px; border-radius:999px; }
+    .search-box { width:100%; padding:13px 18px; border-radius:999px; border:1.5px solid var(--main-light); font-size:14px; outline:none; background:#fff; margin:14px 0 18px; }
+    .search-box:focus { border-color:var(--main); }
+
+    .viewer-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    @media (max-width:680px){ .viewer-grid{ grid-template-columns:repeat(2,1fr); gap:9px;} }
+    @media (max-width:380px){ .viewer-grid{ grid-template-columns:repeat(2,1fr); gap:8px;} .viewer-card{ padding:14px 8px;} .viewer-av,.viewer-av-fb{ width:52px; height:52px;} }
+    .viewer-card {
+      background:#fff; border:1.5px solid var(--main-light); border-radius:18px;
+      padding:20px 14px; text-align:center; cursor:pointer; transition:all .2s;
+    }
+    .viewer-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); border-color:var(--main); }
+    .viewer-av { width:62px; height:62px; border-radius:50%; object-fit:cover; margin:0 auto 10px; display:block; border:3px solid var(--main-light); background:var(--main-light); }
+    .viewer-av-fb { width:62px; height:62px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#e6e9ee,#c4cad4); color:#fff; font-size:24px; font-weight:700; border:3px solid var(--main-light); }
+    .viewer-nick { font-size:14px; font-weight:700; color:var(--text); }
+    .viewer-id { font-size:11px; color:var(--text-soft); margin:2px 0 8px; }
+    .viewer-total { display:inline-block; background:var(--main); color:#fff; border-radius:999px; padding:3px 14px; font-size:12px; font-weight:700; }
+
+    .ov { position:absolute; left:0; right:0; background:rgba(22,26,32,0.35); display:none; align-items:flex-start; justify-content:center; z-index:500; padding:16px; }
+    .ov.show { display:flex; }
+    .modal {
+      background:#fff; border-radius:22px; width:100%; max-width:420px;
+      max-height:84vh; display:flex; flex-direction:column; overflow:hidden;
+      box-shadow:0 20px 60px rgba(80,93,107,0.3); animation:pop .22s ease;
+    }
+    @keyframes pop { from{ transform:scale(.94); opacity:0;} to{ transform:scale(1); opacity:1;} }
+    .modal-top { display:flex; align-items:center; gap:12px; padding:20px 22px 16px; border-bottom:1px solid var(--main-light); position:relative; }
+    .modal-av { width:52px; height:52px; border-radius:50%; object-fit:cover; border:3px solid var(--main-light); background:var(--main-light); flex-shrink:0; }
+    .modal-av-fb { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#e6e9ee,#c4cad4); color:#fff; font-size:20px; font-weight:700; border:3px solid var(--main-light); flex-shrink:0; }
+    .modal-nick { font-size:18px; font-weight:800; color:var(--main-dark); line-height:1.2; }
+    .modal-id { font-size:12px; color:var(--text-soft); }
+    .modal-x { position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px; color:var(--text-soft); cursor:pointer; line-height:1; }
+    .modal-body { padding:14px 18px 20px; overflow-y:auto; }
+    .upbo-row {
+      display:flex; align-items:center; gap:10px; padding:11px 14px; margin-bottom:7px;
+      background:var(--main-light); border:1px solid var(--main-light); border-radius:12px;
+    }
+    .upbo-row .nm { flex:1; font-size:14px; color:var(--text); font-weight:500; }
+    .upbo-row .ev { font-size:10px; font-weight:700; color:#b07d18; background:#fff0d6; padding:2px 8px; border-radius:999px; }
+    .upbo-row .ct { font-size:13px; font-weight:800; color:var(--main-dark); background:#fff; border:1.5px solid var(--main-light); border-radius:999px; padding:3px 12px; min-width:42px; text-align:center; }
+    .modal-empty { text-align:center; color:var(--text-soft); padding:30px; font-size:14px; }
+    body.dark .upbo-update { background: var(--card); }
+    body.dark .search-box { background: var(--card); color: var(--text); }
+    body.dark .viewer-card { background: var(--card); }
+    body.dark .modal { background: var(--card); }
+    body.dark .upbo-row { background: #22262e; }
+    body.dark .upbo-row .ct { background: var(--card); }
+  </style>
+</head>
+<body>
+<div id="fallbox" aria-hidden="true"></div>
+<script>
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var box=document.getElementById('fallbox'); if(!box) return;
+  var kinds=[{g:'\u2665',c:'#9ED4BF'},{g:'\u25C6',c:'#C3BAE8'},{g:'\u2726',c:'#B5DFA0'},{g:'\uD83C\uDF4F',c:''}];
+  for(var i=0;i<14;i++){
+    var k=kinds[i%kinds.length], s=document.createElement('span');
+    s.textContent=k.g;
+    s.style.left=(2+Math.random()*94).toFixed(1)+'%';
+    s.style.fontSize=Math.round(13+Math.random()*13)+'px';
+    s.style.opacity=(0.35+Math.random()*0.35).toFixed(2);
+    if(k.c) s.style.color=k.c;
+    s.style.animation='fallDown '+(9+Math.random()*9).toFixed(1)+'s linear '+(-Math.random()*18).toFixed(1)+'s infinite';
+    box.appendChild(s);
+  }
+})();
+</script>
+
+<nav class="nav"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">송민트</a>
+  <a href="../index.html">메인</a>
+  <a href="../profile/">프로필</a>
+  <a href="../notice/">공지</a>
+  <a href="../schedule/">일정</a>
+  <a href="index.html" class="active">업보</a>
+  <a href="../diary/">다이어리</a>
+  <a href="../song/">노래책</a>
+  <a href="../dress/">옷장</a>
+  <a href="../game/">미니게임</a>
+  <button class="theme-switch" id="themeSwitch" type="button" aria-label="다크모드 전환"><span class="knob" id="themeKnob">🌙</span></button>
+</div></nav>
+
+<div class="container stagger">
+  <div class="card">
+    <div class="upbo-head">
+      <div>
+        <div class="upbo-eyebrow">UPBO</div>
+        <div class="upbo-title">업보 현황</div>
+      </div>
+      <span class="upbo-update" id="update-date"></span>
+    </div>
+    <input class="search-box" id="search" placeholder="🔍 닉네임 또는 아이디 검색...">
+    <div class="viewer-grid" id="grid"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<div class="ov" id="ov" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-top" id="modal-top"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase.js"></script>
+<script>
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function soopAvatar(id){ if(!id) return null; id=String(id).trim().toLowerCase(); if(id.length<2) return null; return `https://profile.img.sooplive.co.kr/LOGO/${id.slice(0,2)}/${id}/${id}.jpg`; }
+
+  let viewers=[], types=[], counts=[];
+
+  async function init(){
+    [viewers, types, counts] = await Promise.all([
+      fetchAll('viewers', { order:'sort_order', asc:true }),
+      fetchAll('upbo_types', { order:'sort_order', asc:true }),
+      fetchAll('upbo_counts', { order:'id', asc:true })
+    ]);
+    let latest = counts.reduce((m,c)=> c.updated_at && c.updated_at>m ? c.updated_at : m, '');
+    document.getElementById('update-date').textContent = latest ? '갱신일: ' + latest.slice(0,10) : '';
+    render(viewers);
+    enableIframeAutoHeight();
+  }
+
+  function viewerTotal(vid){
+    return counts.filter(c=>c.viewer_id===vid && c.count>0).reduce((s,c)=>s+c.count,0);
+  }
+
+  function render(list){
+    const grid=document.getElementById('grid');
+    if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1"><div class="empty"><div class="empty-icon">⚡</div>시청자가 없어요</div></div>'; enableIframeAutoHeight(); return; }
+    grid.innerHTML = list.map(v=>{
+      const av=soopAvatar(v.soop_id); const ini=(v.nickname||'?').charAt(0);
+      const avHtml = av ? `<img class="viewer-av" src="${av}" onerror="this.outerHTML='<div class=\\'viewer-av-fb\\'>${ini}</div>'">` : `<div class="viewer-av-fb">${ini}</div>`;
+      const total=viewerTotal(v.id);
+      return `<div class="viewer-card" onclick="openModal(${v.id})">
+        ${avHtml}
+        <div class="viewer-nick">${esc(v.nickname)}</div>
+        ${v.soop_id?`<div class="viewer-id">(${esc(v.soop_id)})</div>`:'<div class="viewer-id">&nbsp;</div>'}
+        <span class="viewer-total">업보 ${total}</span>
+      </div>`;
+    }).join('');
+    enableIframeAutoHeight();
+  }
+
+  function openModal(vid){
+    const v=viewers.find(x=>x.id===vid); if(!v) return;
+    const av=soopAvatar(v.soop_id); const ini=(v.nickname||'?').charAt(0);
+    const avHtml = av ? `<img class="modal-av" src="${av}" onerror="this.outerHTML='<div class=\\'modal-av-fb\\'>${ini}</div>'">` : `<div class="modal-av-fb">${ini}</div>`;
+    document.getElementById('modal-top').innerHTML = `
+      ${avHtml}
+      <div><div class="modal-nick">${esc(v.nickname)}</div>${v.soop_id?`<div class="modal-id">(${esc(v.soop_id)})</div>`:''}</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>`;
+
+    const myCounts = {};
+    counts.filter(c=>c.viewer_id===vid).forEach(c=>{ myCounts[c.type_id]=c.count; });
+    const rows = types.filter(t=>(myCounts[t.id]||0)>0).map(t=>`
+      <div class="upbo-row">
+        <span class="nm">${esc(t.name)}</span>
+        ${t.category==='이벤트'?'<span class="ev">이벤트</span>':''}
+        <span class="ct">×${myCounts[t.id]}</span>
+      </div>`).join('');
+    document.getElementById('modal-body').innerHTML = rows || '<div class="modal-empty">아직 업보가 없어요 ♡</div>';
+    const ov = document.getElementById('ov');
+    // SOOP iframe(고정높이·스크롤off) 대응: 클릭 지점 기준으로 모달 띄움
+    const e = window.event;
+    let y = 200;
+    if (e) { y = (e.pageY != null ? e.pageY : (e.clientY||0)); }
+    ov.style.top = Math.max(10, y - 80) + 'px';
+    ov.style.height = 'auto';
+    ov.style.minHeight = '0';
+    ov.classList.add('show');
+  }
+  function closeModal(){ document.getElementById('ov').classList.remove('show'); }
+
+  document.getElementById('search').addEventListener('input', e=>{
+    const q=e.target.value.trim().toLowerCase();
+    render(viewers.filter(v=> (v.nickname||'').toLowerCase().includes(q) || (v.soop_id||'').toLowerCase().includes(q)));
+  });
+
+  init();
+</script>
+<script>
+(function(){
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+  var sw = document.getElementById('themeSwitch');
+  var knob = document.getElementById('themeKnob');
+  function refresh(){ if(knob) knob.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; }
+  if (sw) sw.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    refresh();
+  });
+  refresh();
+})();
+</script>
+<!-- 공통 연출(입자·클릭·기울기) -->
+<script src="../assets.js"></script>
+<script src="../icons.js"></script>
+<script src="../fx.js"></script>
+</body>
+</html>

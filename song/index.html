@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>송민트 · 노래책</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/jpeg" href="https://profile.img.sooplive.co.kr/LOGO/ad/ad8hv5jk7d6/ad8hv5jk7d6.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .song-head { display:flex; align-items:center; gap:9px; margin-bottom:14px; }
+    .song-head .t { font-size:22px; font-weight:800; color:var(--main-dark); }
+    .filter-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+    .search-box { flex:1; min-width:200px; padding:12px 18px; border-radius:999px; border:1.5px solid var(--main-light); font-size:14px; outline:none; background:#fff; }
+    .search-box:focus { border-color:var(--main); }
+    .genre-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+    .rand-btn { flex:0 0 auto; padding:12px 22px; border-radius:999px; border:none; cursor:pointer;
+      background:var(--main); color:#fff; font-family:'Jua','Noto Sans KR',sans-serif; font-size:15px;
+      box-shadow:0 6px 14px rgba(62,142,126,.24); transition:transform .15s; }
+    .rand-btn:hover { transform:translateY(-2px); }
+    .rand-result { margin:14px 0 4px; padding:20px 22px; border-radius:16px 6px 18px 7px;
+      background:#EAF8EF; border:2.5px dashed var(--main); text-align:center; animation:randPop .35s ease-out; }
+    body.dark .rand-result { background:#25392F; }
+    .rand-result .rl { font-family:'Gaegu',cursive; font-weight:700; font-size:16px; color:var(--main-dark); }
+    .rand-result .rt { font-family:'Jua','Noto Sans KR',sans-serif; font-size:28px; color:var(--text); margin:4px 0 2px; }
+    .rand-result .ra { font-family:'Gaegu',cursive; font-size:18px; color:var(--text-soft); }
+    .rand-result .rand-again { margin-top:12px; padding:8px 20px; border-radius:14px; border:none; cursor:pointer;
+      background:var(--main-light); color:var(--main-dark); font-family:'Gaegu',cursive; font-weight:700; font-size:16px; }
+    body.dark .rand-result .rand-again { background:#33463D; color:#9EE0C4; }
+    @keyframes randPop { from { transform:scale(.94); opacity:0 } to { transform:scale(1); opacity:1 } }
+    @media (prefers-reduced-motion:reduce) { .rand-result { animation:none } }
+
+    .gt { padding:8px 15px; border-radius:999px; border:1.5px solid var(--main-light); background:#fff; color:var(--text-soft); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .gt.active { background:var(--main); color:#fff; border-color:var(--main); }
+    .count-line { font-size:13px; color:var(--text-soft); margin:14px 0 6px; }
+    table { width:100%; border-collapse:collapse; }
+    thead th { text-align:left; font-size:12px; font-weight:700; color:var(--main-dark); padding:10px 12px; background:var(--main-light); }
+    thead th:first-child { border-radius:8px 0 0 8px; } thead th:last-child { border-radius:0 8px 8px 0; }
+    tbody td { padding:13px 12px; border-bottom:1px solid var(--main-light); font-size:14px; color:var(--text); }
+    tbody tr:hover td { background:var(--main-light); }
+    .s-num { color:var(--text-soft); font-size:13px; width:36px; }
+    .s-title { font-weight:600; }
+    .s-genre { font-size:11px; background:var(--main-light); color:var(--main-dark); padding:3px 10px; border-radius:999px; white-space:nowrap; display:inline-block; }
+    .s-diff { display:inline-flex; gap:3px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--main-light); }
+    .dot.on { background:var(--main); }
+    .pagination { display:flex; justify-content:center; gap:6px; margin-top:16px; }
+    .pg { width:34px; height:34px; border-radius:50%; border:1.5px solid var(--main-light); background:#fff; color:var(--text-mid); font-size:13px; font-weight:600; cursor:pointer; }
+    .pg.active { background:var(--main); color:#fff; border-color:var(--main); }
+    body.dark thead th { background:#22262e; }
+    body.dark tbody tr:hover td { background:#22262e; }
+    body.dark .search-box { background:var(--card); color:var(--text); }
+    body.dark .pg { background:var(--card); color:var(--text); }
+    @media (max-width:560px){
+      .hide-m { display:none; }
+      thead th { padding:9px 8px; font-size:11px; }
+      tbody td { padding:11px 6px; font-size:13px; }
+      .s-num { width:24px; font-size:12px; }
+      .s-genre { font-size:10px; padding:2px 8px; }
+      .dot { width:7px; height:7px; }
+    }
+  </style>
+</head>
+<body>
+<div id="fallbox" aria-hidden="true"></div>
+<script>
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var box=document.getElementById('fallbox'); if(!box) return;
+  var kinds=[{g:'\u2665',c:'#9ED4BF'},{g:'\u25C6',c:'#C3BAE8'},{g:'\u2726',c:'#B5DFA0'},{g:'\uD83C\uDF4F',c:''}];
+  for(var i=0;i<14;i++){
+    var k=kinds[i%kinds.length], s=document.createElement('span');
+    s.textContent=k.g;
+    s.style.left=(2+Math.random()*94).toFixed(1)+'%';
+    s.style.fontSize=Math.round(13+Math.random()*13)+'px';
+    s.style.opacity=(0.35+Math.random()*0.35).toFixed(2);
+    if(k.c) s.style.color=k.c;
+    s.style.animation='fallDown '+(9+Math.random()*9).toFixed(1)+'s linear '+(-Math.random()*18).toFixed(1)+'s infinite';
+    box.appendChild(s);
+  }
+})();
+</script>
+
+<nav class="nav"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">송민트</a>
+  <a href="../index.html">메인</a>
+  <a href="../profile/">프로필</a>
+  <a href="../notice/">공지</a>
+  <a href="../schedule/">일정</a>
+  <a href="../work/">업보</a>
+  <a href="../diary/">다이어리</a>
+  <a href="index.html" class="active">노래책</a>
+  <a href="../dress/">옷장</a>
+  <a href="../game/">미니게임</a>
+  <button class="theme-switch" id="themeSwitch" type="button" aria-label="다크모드 전환"><span class="knob" id="themeKnob">🌙</span></button>
+</div></nav>
+
+<div class="container stagger">
+  <div class="card">
+    <div class="song-head"><span style="font-size:22px">🎵</span><span class="t">노래책</span></div>
+    <div class="filter-row">
+      <input class="search-box" id="search" placeholder="🔍 곡명 · 아티스트 검색...">
+      <button class="rand-btn" id="randBtn" type="button">🎲 랜덤 뽑기</button>
+    </div>
+    <div class="rand-result" id="randResult" hidden>
+      <div class="rl">오늘의 추천곡 🍏</div>
+      <div class="rt" id="randTitle">—</div>
+      <div class="ra" id="randArtist"></div>
+      <button class="rand-again" id="randAgain" type="button">다시 뽑기 🎲</button>
+    </div>
+    <div class="genre-tabs" id="genre-tabs"></div>
+    <div class="count-line" id="count"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="s-num">#</th><th>제목</th><th class="hide-m">아티스트</th><th>장르</th><th>난이도</th></tr></thead>
+        <tbody id="song-body"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+<footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase.js"></script>
+<script>
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  const GENRES = ['전체','인디','포크','K-Pop','J-Pop','Pop','기타'];
+  const PAGE = 30;
+  let songs = [], curGenre = '전체', curPage = 1, keyword = '';
+
+  async function init() {
+    songs = await fetchAll('songs', { order: 'id', asc: true });
+    renderGenres(); render();
+    enableIframeAutoHeight();
+  }
+  function renderGenres() {
+    document.getElementById('genre-tabs').innerHTML = GENRES.map(g =>
+      `<button class="gt ${g===curGenre?'active':''}" onclick="selGenre('${g}')">${g}</button>`).join('');
+  }
+  function selGenre(g){ curGenre=g; curPage=1; renderGenres(); render(); enableIframeAutoHeight(); }
+
+  /* ── 🎲 랜덤 뽑기 (현재 장르·검색 필터 안에서) ── */
+  function rollRandom(){
+    const list = filtered();
+    const box = document.getElementById('randResult');
+    if (!list.length){
+      box.hidden = false;
+      document.getElementById('randTitle').textContent = '노래가 없어요 😢';
+      document.getElementById('randArtist').textContent = '';
+      return;
+    }
+    const pick = list[Math.floor(Math.random() * list.length)];
+    box.hidden = false;
+    box.style.animation = 'none'; void box.offsetWidth; box.style.animation = '';
+    document.getElementById('randTitle').textContent = pick.title || '제목 없음';
+    const bits = [];
+    if (pick.artist) bits.push(pick.artist);
+    if (pick.genre)  bits.push(pick.genre);
+    document.getElementById('randArtist').textContent = bits.join(' · ');
+  }
+  document.getElementById('randBtn').addEventListener('click', rollRandom);
+  document.getElementById('randAgain').addEventListener('click', rollRandom);
+
+
+  function filtered() {
+    return songs.filter(s => {
+      const okG = curGenre==='전체' || s.genre===curGenre;
+      const q = keyword.toLowerCase();
+      const okQ = !q || (s.title||'').toLowerCase().includes(q) || (s.artist||'').toLowerCase().includes(q);
+      return okG && okQ;
+    });
+  }
+  function render() {
+    const list = filtered();
+    const totalPages = Math.max(1, Math.ceil(list.length / PAGE));
+    if (curPage > totalPages) curPage = 1;
+    const pageItems = list.slice((curPage-1)*PAGE, curPage*PAGE);
+    document.getElementById('count').textContent = `총 ${list.length}곡 · ${curPage}/${totalPages} 페이지`;
+    const body = document.getElementById('song-body');
+    if (!list.length) { body.innerHTML = '<tr><td colspan="5"><div class="empty"><div class="empty-icon">🎵</div>노래가 없어요</div></td></tr>'; document.getElementById('pagination').innerHTML=''; return; }
+    body.innerHTML = pageItems.map((s, i) => {
+      const num = (curPage-1)*PAGE + i + 1;
+      const diff = parseInt(s.difficulty)||0;
+      let dots=''; for(let k=1;k<=5;k++) dots+=`<span class="dot${k<=diff?' on':''}"></span>`;
+      return `<tr>
+        <td class="s-num">${num}</td>
+        <td class="s-title">${esc(s.title)}</td>
+        <td class="hide-m">${esc(s.artist)||'-'}</td>
+        <td><span class="s-genre">${esc(s.genre)||'기타'}</span></td>
+        <td><span class="s-diff">${dots}</span></td>
+      </tr>`;
+    }).join('');
+    const pg = document.getElementById('pagination'); pg.innerHTML='';
+    if (totalPages>1) for(let i=1;i<=totalPages;i++){
+      const b=document.createElement('button'); b.className='pg'+(i===curPage?' active':''); b.textContent=i;
+      b.onclick=()=>{ curPage=i; render(); enableIframeAutoHeight(); window.scrollTo(0,0); };
+      pg.appendChild(b);
+    }
+  }
+  document.getElementById('search').addEventListener('input', e=>{ keyword=e.target.value.trim(); curPage=1; render(); enableIframeAutoHeight(); });
+  init();
+</script>
+<script>
+(function(){
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+  var sw = document.getElementById('themeSwitch');
+  var knob = document.getElementById('themeKnob');
+  function refresh(){ if(knob) knob.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; }
+  if (sw) sw.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    refresh();
+  });
+  refresh();
+})();
+</script>
+<!-- 공통 연출(입자·클릭·기울기) -->
+<script src="../assets.js"></script>
+<script src="../icons.js"></script>
+<script src="../fx.js"></script>
+</body>
+</html>

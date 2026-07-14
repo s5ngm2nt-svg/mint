@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>송민트 · 일기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/jpeg" href="https://profile.img.sooplive.co.kr/LOGO/ad/ad8hv5jk7d6/ad8hv5jk7d6.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .diary-list { display: flex; flex-direction: column; gap: 10px; }
+    .diary-item {
+      background: #fff; border-radius: 14px;
+      border: 1.5px solid var(--main-light);
+      padding: 16px 20px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .diary-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .diary-header { display: flex; align-items: center; gap: 12px; }
+    .diary-mood { display: none; }
+    .diary-meta { flex: 1; }
+    .diary-title { font-size: 16px; font-weight: 700; color: var(--text); }
+    .diary-date { font-size: 13px; color: var(--text-soft); margin-top: 3px; }
+    .diary-arrow { color: var(--main-light); font-size: 16px; transition: transform 0.2s; }
+    .diary-item.open .diary-arrow { transform: rotate(90deg); }
+    .diary-content {
+      color: var(--text); line-height: 1.7;
+      font-family: 'Noto Sans KR', sans-serif; font-size: 15px;
+      max-height: 0; overflow: hidden; transition: max-height 0.4s;
+      white-space: pre-wrap;
+    }
+    .diary-item.open .diary-content {
+      max-height: 4000px; margin-top: 14px;
+      padding-top: 14px; border-top: 1px solid var(--main-light);
+    }
+    .post-img { display: block; max-width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--main-light); }
+    .diary-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--main-light); flex-shrink: 0; }
+    .cmt-wrap { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--main-light); }
+    .cmt-title { font-size: 15px; font-weight: 700; color: var(--main-dark); margin-bottom: 10px; }
+    .cmt-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 10px; }
+    .cmt-list:empty { margin-bottom: 0; }
+    .cmt-item { background: var(--main-light); border-radius: 10px; padding: 9px 13px; white-space: normal; }
+    .cmt-item .cn { font-size: 13px; font-weight: 700; color: var(--main-dark); white-space: normal; }
+    .cmt-item .cm { font-size: 14px; color: var(--text); margin-top: 3px; white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+    .cmt-empty { font-size: 13px; color: var(--text-soft); padding: 2px 0 8px; }
+    .cmt-form { display: flex; gap: 6px; flex-wrap: wrap; }
+    .cmt-nick { width: 100px; padding: 10px 12px; border-radius: 9px; border: 1.5px solid var(--main-light); font-size: 14px; outline: none; }
+    .cmt-msg { flex: 1; min-width: 130px; padding: 10px 13px; border-radius: 9px; border: 1.5px solid var(--main-light); font-size: 14px; outline: none; }
+    .cmt-nick:focus, .cmt-msg:focus { border-color: var(--main); }
+    .cmt-send { padding: 10px 18px; border-radius: 9px; border: none; background: var(--main); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; }
+    body.dark .diary-item { background: var(--card); }
+    body.dark .cmt-item { background: #22262e; }
+    body.dark .cmt-nick,
+    body.dark .cmt-msg { background: var(--card); color: var(--text); }
+    @media (max-width: 560px) {
+      .card { padding: 14px 12px; }
+      .diary-item { padding: 13px 14px; }
+      .diary-item.open .diary-content { margin-top: 10px; padding-top: 10px; }
+      .post-img { margin-bottom: 8px; }
+      .cmt-wrap { margin-top: 10px; padding-top: 10px; }
+      .cmt-form { gap: 5px; }
+      .cmt-nick { width: 100%; }
+      .cmt-msg { min-width: 0; width: 100%; }
+      .cmt-send { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div id="fallbox" aria-hidden="true"></div>
+<script>
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var box=document.getElementById('fallbox'); if(!box) return;
+  var kinds=[{g:'\u2665',c:'#9ED4BF'},{g:'\u25C6',c:'#C3BAE8'},{g:'\u2726',c:'#B5DFA0'},{g:'\uD83C\uDF4F',c:''}];
+  for(var i=0;i<14;i++){
+    var k=kinds[i%kinds.length], s=document.createElement('span');
+    s.textContent=k.g;
+    s.style.left=(2+Math.random()*94).toFixed(1)+'%';
+    s.style.fontSize=Math.round(13+Math.random()*13)+'px';
+    s.style.opacity=(0.35+Math.random()*0.35).toFixed(2);
+    if(k.c) s.style.color=k.c;
+    s.style.animation='fallDown '+(9+Math.random()*9).toFixed(1)+'s linear '+(-Math.random()*18).toFixed(1)+'s infinite';
+    box.appendChild(s);
+  }
+})();
+</script>
+
+<nav class="nav"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">송민트</a>
+  <a href="../index.html">메인</a>
+  <a href="../profile/">프로필</a>
+  <a href="../notice/">공지</a>
+  <a href="../schedule/">일정</a>
+  <a href="../work/">업보</a>
+  <a href="index.html" class="active">다이어리</a>
+  <a href="../song/">노래책</a>
+  <a href="../dress/">옷장</a>
+  <a href="../game/">미니게임</a>
+  <button class="theme-switch" id="themeSwitch" type="button" aria-label="다크모드 전환"><span class="knob" id="themeKnob">🌙</span></button>
+</div></nav>
+
+<div class="container stagger">
+  <div class="page-title">다이어리</div>
+  <div class="page-subtitle" id="diary-sub">송민트의 방송 일기에요</div>
+
+  <div class="card">
+    <div class="diary-list" id="diary-list">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  <div class="pagination" id="pagination"></div>
+</div>
+<footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase.js"></script>
+<script>
+  const PAGE_SIZE = 15;
+  let allData = [], currentPage = 1;
+
+  async function init() {
+    allData = await fetchAll('diary', { order: 'diary_date', asc: false });
+    renderPage(1);
+  }
+  function renderPage(page) {
+    currentPage = page;
+    const start = (page - 1) * PAGE_SIZE;
+    const items = allData.slice(start, start + PAGE_SIZE);
+    const el = document.getElementById('diary-list');
+
+    if (!allData.length) {
+      el.innerHTML = '<div class="empty">일기가 없어요</div>';
+      return;
+    }
+
+    el.innerHTML = items.map(d => {
+      const imgs = (d.images && d.images.length) ? d.images : (d.image_url ? [d.image_url] : []);
+      const imgHtml = imgs.map(u => `<img src="${u}" class="post-img" loading="lazy" alt="">`).join('');
+      const thumb = imgs.length ? `<img src="${imgs[0]}" class="diary-thumb" loading="lazy" alt="">` : '';
+      return `
+      <div class="diary-item" data-id="${d.id}">
+        <div class="diary-header" onclick="toggleDiary(this)">
+          <div class="diary-meta">
+            <div class="diary-title">${d.title}</div>
+            <div class="diary-date">${d.diary_date || ''}</div>
+          </div>
+          ${thumb}
+          <span class="diary-arrow">›</span>
+        </div>
+        <div class="diary-content">
+          ${imgHtml}${d.content || ''}
+          <div class="cmt-wrap">
+            <div class="cmt-title">💬 댓글</div>
+            <div class="cmt-list" id="cmt-list-${d.id}"></div>
+            <div class="cmt-form">
+              <input class="cmt-nick" id="cmt-nick-${d.id}" placeholder="닉네임" onclick="event.stopPropagation()">
+              <input class="cmt-msg" id="cmt-msg-${d.id}" placeholder="댓글 달기..." onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter')addComment(${d.id})">
+              <button class="cmt-send" onclick="event.stopPropagation();addComment(${d.id})">등록</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const totalPages = Math.ceil(allData.length / PAGE_SIZE);
+    const pg = document.getElementById('pagination');
+    pg.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === page ? ' active' : '');
+      btn.textContent = i;
+      btn.onclick = () => renderPage(i);
+      pg.appendChild(btn);
+    }
+  }
+  function toggleDiary(headerEl) {
+    const item = headerEl.closest('.diary-item');
+    const wasOpen = item.classList.contains('open');
+    item.classList.toggle('open');
+    if (!wasOpen) { loadComments(item.dataset.id); enableIframeAutoHeight(); }
+  }
+
+  let commentsCache = {};
+  async function loadComments(diaryId) {
+    const list = document.getElementById('cmt-list-' + diaryId);
+    if (!list) return;
+    const all = await fetchAll('comments', { order: 'created_at', asc: true });
+    const mine = all.filter(c => String(c.diary_id) === String(diaryId));
+    commentsCache[diaryId] = mine;
+    if (!mine.length) { list.innerHTML = '<div class="cmt-empty">아직 댓글이 없어요. 첫 댓글을 남겨보세요!</div>'; return; }
+    list.innerHTML = mine.map(c => `<div class="cmt-item"><div class="cn">${(c.nickname||'익명').replace(/</g,'&lt;')}</div><div class="cm">${(c.message||'').replace(/</g,'&lt;')}</div></div>`).join('');
+    enableIframeAutoHeight();
+  }
+  async function addComment(diaryId) {
+    const msgEl = document.getElementById('cmt-msg-' + diaryId);
+    const nickEl = document.getElementById('cmt-nick-' + diaryId);
+    const msg = msgEl.value.trim();
+    if (!msg) { alert('댓글을 입력해주세요'); return; }
+    const nick = nickEl.value.trim() || '익명';
+    const ok = await insertRow('comments', { diary_id: diaryId, nickname: nick, message: msg });
+    if (ok) { msgEl.value=''; loadComments(diaryId); }
+    else alert('댓글 등록 실패 ㅠㅠ');
+  }
+
+  init();
+</script>
+<script>
+(function(){
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+  var sw = document.getElementById('themeSwitch');
+  var knob = document.getElementById('themeKnob');
+  function refresh(){ if(knob) knob.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; }
+  if (sw) sw.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    refresh();
+  });
+  refresh();
+})();
+</script>
+<!-- 공통 연출(입자·클릭·기울기) -->
+<script>
+/* 다이어리 부제 (admin에서 수정) */
+(async function(){
+  try{
+    var rows = await fetchAll('profile');
+    var d = (rows && rows[0] && rows[0].data) ? rows[0].data : null;
+    if(d && d['diary-sub']){
+      var el=document.getElementById('diary-sub');
+      if(el){ el.textContent = d['diary-sub']; if(window.iconizeEmoji) window.iconizeEmoji(el); }
+    }
+  }catch(e){}
+})();
+</script>
+<script src="../assets.js"></script>
+<script src="../icons.js"></script>
+<script src="../fx.js"></script>
+</body>
+</html>

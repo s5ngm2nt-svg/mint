@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>송민트 · 공지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/jpeg" href="https://profile.img.sooplive.co.kr/LOGO/ad/ad8hv5jk7d6/ad8hv5jk7d6.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .notice-list { display: flex; flex-direction: column; gap: 10px; }
+    .notice-item {
+      background: #fff; border-radius: 14px;
+      border: 1.5px solid var(--main-light);
+      padding: 18px 22px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .notice-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .notice-item.pinned { border-left: 4px solid var(--main); background: var(--main-light); }
+    .notice-header { display: flex; align-items: center; gap: 10px; }
+    .notice-pin { font-size: 11px; background: var(--main); color: #fff; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+    .notice-title { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; }
+    .notice-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--main-light); flex-shrink: 0; }
+    .notice-date { font-size: 12px; color: var(--text-soft); }
+    .notice-arrow { color: var(--main-light); font-size: 16px; transition: transform 0.2s; }
+    .notice-item.open .notice-arrow { transform: rotate(90deg); }
+    .notice-content {
+      font-size: 14px; color: var(--text-mid); line-height: 1.8;
+      max-height: 0; overflow: hidden; transition: max-height 0.3s;
+      white-space: pre-wrap;
+    }
+    .notice-item.open .notice-content {
+      max-height: 3000px; margin-top: 14px;
+      padding-top: 14px; border-top: 1px solid var(--main-light);
+    }
+    .notice-count { font-size: 13px; color: var(--text-soft); margin-bottom: 4px; }
+    .post-img { display: block; max-width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--main-light); }
+    body.dark .notice-item { background: var(--card); }
+    body.dark .notice-item.pinned { background: #22262e; }
+  </style>
+</head>
+<body>
+<div id="fallbox" aria-hidden="true"></div>
+<script>
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var box=document.getElementById('fallbox'); if(!box) return;
+  var kinds=[{g:'\u2665',c:'#9ED4BF'},{g:'\u25C6',c:'#C3BAE8'},{g:'\u2726',c:'#B5DFA0'},{g:'\uD83C\uDF4F',c:''}];
+  for(var i=0;i<14;i++){
+    var k=kinds[i%kinds.length], s=document.createElement('span');
+    s.textContent=k.g;
+    s.style.left=(2+Math.random()*94).toFixed(1)+'%';
+    s.style.fontSize=Math.round(13+Math.random()*13)+'px';
+    s.style.opacity=(0.35+Math.random()*0.35).toFixed(2);
+    if(k.c) s.style.color=k.c;
+    s.style.animation='fallDown '+(9+Math.random()*9).toFixed(1)+'s linear '+(-Math.random()*18).toFixed(1)+'s infinite';
+    box.appendChild(s);
+  }
+})();
+</script>
+
+<nav class="nav"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">송민트</a>
+  <a href="../index.html">메인</a>
+  <a href="../profile/">프로필</a>
+  <a href="index.html" class="active">공지</a>
+  <a href="../schedule/">일정</a>
+  <a href="../work/">업보</a>
+  <a href="../diary/">다이어리</a>
+  <a href="../song/">노래책</a>
+  <a href="../dress/">옷장</a>
+  <a href="../game/">미니게임</a>
+  <button class="theme-switch" id="themeSwitch" type="button" aria-label="다크모드 전환"><span class="knob" id="themeKnob">🌙</span></button>
+</div></nav>
+
+<div class="container stagger">
+  <div class="page-title">공지사항</div>
+  <div class="page-subtitle">민트가 할 말 있삐!!!!!!!!</div>
+
+  <div class="card">
+    <div class="notice-count" id="count"></div>
+    <div class="notice-list" id="notice-list">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+<footer>© 2026 송민트 Official.<br>비즈니스 문의 — 문의 버튼을 이용해 주세요 💚</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase.js"></script>
+<script>
+  async function init() {
+    const data = await fetchAll('notice', { order: 'created_at', asc: false });
+    const pinned = data.filter(n => n.pinned);
+    const normal = data.filter(n => !n.pinned);
+    const all = [...pinned, ...normal];
+    const el = document.getElementById('notice-list');
+    document.getElementById('count').textContent = `총 ${all.length}개의 공지`;
+
+    if (!all.length) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">-</div>공지사항이 없어요</div>';
+      return;
+    }
+
+    el.innerHTML = all.map(n => {
+      const date = new Date(n.created_at);
+      const dateStr = `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
+      const imgs = (n.images&&n.images.length)?n.images:(n.image_url?[n.image_url]:[]);
+      const thumb = imgs.length ? `<img src="${imgs[0]}" class="notice-thumb" loading="lazy" alt="">` : '';
+      return `
+        <div class="notice-item${n.pinned?' pinned':''}" onclick="this.classList.toggle('open')">
+          <div class="notice-header">
+            ${n.pinned ? '<span class="notice-pin">고정</span>' : ''}
+            <span class="notice-title">${n.title}</span>
+            ${thumb}
+            <span class="notice-date">${dateStr}</span>
+            <span class="notice-arrow">›</span>
+          </div>
+          <div class="notice-content">${imgs.map(u=>`<img src="${u}" class="post-img" loading="lazy" alt="">`).join('')}${n.content || ''}</div>
+        </div>`;
+    }).join('');
+  }
+  init();
+</script>
+<script>
+(function(){
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+  var sw = document.getElementById('themeSwitch');
+  var knob = document.getElementById('themeKnob');
+  function refresh(){ if(knob) knob.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; }
+  if (sw) sw.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    refresh();
+  });
+  refresh();
+})();
+</script>
+<!-- 공통 연출(입자·클릭·기울기) -->
+<script src="../assets.js"></script>
+<script src="../icons.js"></script>
+<script src="../fx.js"></script>
+</body>
+</html>

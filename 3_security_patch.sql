@@ -12,7 +12,32 @@ BEGIN;
 ALTER TABLE upbo_counts ADD COLUMN IF NOT EXISTS memo TEXT;
 
 
--- ── 2) 접근 권한 재설정 ──
+-- ── 2) id 시퀀스 재동기화 ──
+-- 2_data_migrate.sql 은 id 를 직접 지정해서 넣는다. INSERT 만 실행하고
+-- 파일 끝의 setval 을 안 돌리면 시퀀스가 1 에 멈춰 있어서,
+-- 그 뒤 관리자에서 새 행을 넣을 때 "duplicate key (id)=(1)" 로 실패한다.
+-- 아래 블록은 모든 표의 시퀀스를 현재 최대 id 에 맞춘다. 여러 번 실행해도 안전.
+
+DO $$
+DECLARE
+  t   TEXT;
+  sq  TEXT;
+  mx  BIGINT;
+BEGIN
+  FOREACH t IN ARRAY ARRAY[
+    'viewers','upbo_types','upbo_counts','notice','diary','comments',
+    'schedule','songs','original_songs','inquiries'
+  ] LOOP
+    sq := pg_get_serial_sequence('public.' || t, 'id');
+    IF sq IS NOT NULL THEN
+      EXECUTE format('SELECT COALESCE(MAX(id),0) FROM public.%I', t) INTO mx;
+      PERFORM setval(sq::regclass, GREATEST(mx, 1), mx > 0);
+    END IF;
+  END LOOP;
+END $$;
+
+
+-- ── 3) 접근 권한 재설정 ──
 -- 읽기: 누구나 / 등록·수정·삭제: 로그인한 관리자만
 -- 예외: comments·inquiries 는 누구나 등록, inquiries 열람은 관리자만
 
@@ -57,3 +82,12 @@ COMMIT;
 --
 -- SELECT COUNT(*) AS 시청자 FROM viewers;
 -- SELECT COUNT(*) AS 업보기록, COALESCE(SUM(count),0) AS 총합 FROM upbo_counts;
+
+
+-- ── 실행 결과 확인 (자동 출력) ──
+SELECT 'viewers' AS 표, MAX(id) AS 최대id,
+       (SELECT last_value FROM viewers_id_seq)    AS 다음시퀀스 FROM viewers
+UNION ALL
+SELECT 'upbo_types', MAX(id), (SELECT last_value FROM upbo_types_id_seq)  FROM upbo_types
+UNION ALL
+SELECT 'upbo_counts', MAX(id), (SELECT last_value FROM upbo_counts_id_seq) FROM upbo_counts;

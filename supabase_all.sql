@@ -1,8 +1,10 @@
 -- =============================================================
 -- 버추얼 팬페이지 템플릿 — Supabase 전체 셋업 SQL (한 번에 붙여넣기용)
 -- 사용법: Supabase → SQL Editor → 아래 전체 복붙 → Run.
--- ✅ 여러 번 다시 실행해도 안전 (CREATE ... IF NOT EXISTS / DROP POLICY IF EXISTS).
--- ✅ 모든 표는 anon(공개) 키로 읽기+쓰기 허용 — 관리자 페이지가 anon 키로 동작하므로 필수.
+-- 여러 번 다시 실행해도 안전 (CREATE ... IF NOT EXISTS / DROP POLICY IF EXISTS).
+-- 권한: 읽기는 누구나 / 등록·수정·삭제는 로그인한 관리자만(RLS).
+-- 예외: comments·inquiries 는 누구나 등록 가능, inquiries 열람은 관리자만.
+-- 실행 순서: Authentication > Users 에서 관리자 계정을 먼저 만든 뒤 이 SQL 을 Run.
 -- 안 쓰는 카테고리가 있어도 표는 그냥 둬도 무방(빈 표는 아무 영향 없음).
 -- 이미지는 "링크" 방식이라 Storage(버킷) 없이도 동작합니다.
 -- =============================================================
@@ -15,8 +17,15 @@ CREATE TABLE IF NOT EXISTS profile (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE profile ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "profile_all" ON profile;
-CREATE POLICY "profile_all" ON profile FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "profile_all" ON public.profile;
+DROP POLICY IF EXISTS "profile_read" ON public.profile;
+DROP POLICY IF EXISTS "profile_insert" ON public.profile;
+DROP POLICY IF EXISTS "profile_update" ON public.profile;
+DROP POLICY IF EXISTS "profile_delete" ON public.profile;
+CREATE POLICY "profile_read"   ON public.profile FOR SELECT USING (true);
+CREATE POLICY "profile_insert" ON public.profile FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "profile_update" ON public.profile FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "profile_delete" ON public.profile FOR DELETE TO authenticated USING (true);
 
 
 -- ── 공지 ──
@@ -32,8 +41,15 @@ CREATE TABLE IF NOT EXISTS notice (
 ALTER TABLE notice ADD COLUMN IF NOT EXISTS image_url TEXT;
 ALTER TABLE notice ADD COLUMN IF NOT EXISTS images JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE notice ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "notice_all" ON notice;
-CREATE POLICY "notice_all" ON notice FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "notice_all" ON public.notice;
+DROP POLICY IF EXISTS "notice_read" ON public.notice;
+DROP POLICY IF EXISTS "notice_insert" ON public.notice;
+DROP POLICY IF EXISTS "notice_update" ON public.notice;
+DROP POLICY IF EXISTS "notice_delete" ON public.notice;
+CREATE POLICY "notice_read"   ON public.notice FOR SELECT USING (true);
+CREATE POLICY "notice_insert" ON public.notice FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "notice_update" ON public.notice FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "notice_delete" ON public.notice FOR DELETE TO authenticated USING (true);
 
 
 -- ── 일기 ──
@@ -50,8 +66,15 @@ CREATE TABLE IF NOT EXISTS diary (
 ALTER TABLE diary ADD COLUMN IF NOT EXISTS image_url TEXT;
 ALTER TABLE diary ADD COLUMN IF NOT EXISTS images JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE diary ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "diary_all" ON diary;
-CREATE POLICY "diary_all" ON diary FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "diary_all" ON public.diary;
+DROP POLICY IF EXISTS "diary_read" ON public.diary;
+DROP POLICY IF EXISTS "diary_insert" ON public.diary;
+DROP POLICY IF EXISTS "diary_update" ON public.diary;
+DROP POLICY IF EXISTS "diary_delete" ON public.diary;
+CREATE POLICY "diary_read"   ON public.diary FOR SELECT USING (true);
+CREATE POLICY "diary_insert" ON public.diary FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "diary_update" ON public.diary FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "diary_delete" ON public.diary FOR DELETE TO authenticated USING (true);
 
 
 -- ── 일기 댓글 (일기 페이지에서 사용) ──
@@ -63,8 +86,15 @@ CREATE TABLE IF NOT EXISTS comments (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "comments_all" ON comments;
-CREATE POLICY "comments_all" ON comments FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "comments_all" ON public.comments;
+DROP POLICY IF EXISTS "comments_read" ON public.comments;
+DROP POLICY IF EXISTS "comments_insert" ON public.comments;
+DROP POLICY IF EXISTS "comments_update" ON public.comments;
+DROP POLICY IF EXISTS "comments_delete" ON public.comments;
+CREATE POLICY "comments_read"   ON public.comments FOR SELECT USING (true);
+CREATE POLICY "comments_insert" ON public.comments FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "comments_update" ON public.comments FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "comments_delete" ON public.comments FOR DELETE TO authenticated USING (true);
 
 
 -- ── 일정 (달력) — 색/하이라이트/2부/설명 포함 ──
@@ -90,8 +120,15 @@ ALTER TABLE schedule ADD COLUMN IF NOT EXISTS title2      TEXT;
 ALTER TABLE schedule ADD COLUMN IF NOT EXISTS type2       TEXT;
 ALTER TABLE schedule ADD COLUMN IF NOT EXISTS description TEXT;
 ALTER TABLE schedule ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "schedule_all" ON schedule;
-CREATE POLICY "schedule_all" ON schedule FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "schedule_all" ON public.schedule;
+DROP POLICY IF EXISTS "schedule_read" ON public.schedule;
+DROP POLICY IF EXISTS "schedule_insert" ON public.schedule;
+DROP POLICY IF EXISTS "schedule_update" ON public.schedule;
+DROP POLICY IF EXISTS "schedule_delete" ON public.schedule;
+CREATE POLICY "schedule_read"   ON public.schedule FOR SELECT USING (true);
+CREATE POLICY "schedule_insert" ON public.schedule FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "schedule_update" ON public.schedule FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "schedule_delete" ON public.schedule FOR DELETE TO authenticated USING (true);
 
 
 -- ── 노래책: 커버곡 ──
@@ -105,8 +142,15 @@ CREATE TABLE IF NOT EXISTS songs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE songs ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "songs_all" ON songs;
-CREATE POLICY "songs_all" ON songs FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "songs_all" ON public.songs;
+DROP POLICY IF EXISTS "songs_read" ON public.songs;
+DROP POLICY IF EXISTS "songs_insert" ON public.songs;
+DROP POLICY IF EXISTS "songs_update" ON public.songs;
+DROP POLICY IF EXISTS "songs_delete" ON public.songs;
+CREATE POLICY "songs_read"   ON public.songs FOR SELECT USING (true);
+CREATE POLICY "songs_insert" ON public.songs FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "songs_update" ON public.songs FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "songs_delete" ON public.songs FOR DELETE TO authenticated USING (true);
 
 
 -- ── 노래책: 오리지널 곡 (SOOP VOD) ──
@@ -118,8 +162,15 @@ CREATE TABLE IF NOT EXISTS original_songs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE original_songs ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "original_songs_all" ON original_songs;
-CREATE POLICY "original_songs_all" ON original_songs FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "original_songs_all" ON public.original_songs;
+DROP POLICY IF EXISTS "original_songs_read" ON public.original_songs;
+DROP POLICY IF EXISTS "original_songs_insert" ON public.original_songs;
+DROP POLICY IF EXISTS "original_songs_update" ON public.original_songs;
+DROP POLICY IF EXISTS "original_songs_delete" ON public.original_songs;
+CREATE POLICY "original_songs_read"   ON public.original_songs FOR SELECT USING (true);
+CREATE POLICY "original_songs_insert" ON public.original_songs FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "original_songs_update" ON public.original_songs FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "original_songs_delete" ON public.original_songs FOR DELETE TO authenticated USING (true);
 
 
 -- ── 옷장 (헤어 / 렌즈 / 의상) — 이미지는 image_url(링크) ──
@@ -139,7 +190,14 @@ CREATE TABLE IF NOT EXISTS public.dress_items (
 CREATE INDEX IF NOT EXISTS idx_dress_items_category ON public.dress_items(category);
 ALTER TABLE public.dress_items ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "dress_all" ON public.dress_items;
-CREATE POLICY "dress_all" ON public.dress_items FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "dress_items_read" ON public.dress_items;
+DROP POLICY IF EXISTS "dress_items_insert" ON public.dress_items;
+DROP POLICY IF EXISTS "dress_items_update" ON public.dress_items;
+DROP POLICY IF EXISTS "dress_items_delete" ON public.dress_items;
+CREATE POLICY "dress_items_read"   ON public.dress_items FOR SELECT USING (true);
+CREATE POLICY "dress_items_insert" ON public.dress_items FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "dress_items_update" ON public.dress_items FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "dress_items_delete" ON public.dress_items FOR DELETE TO authenticated USING (true);
 
 
 -- ── 업보: 시청자 ──
@@ -152,8 +210,15 @@ CREATE TABLE IF NOT EXISTS viewers (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE viewers ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "viewers_all" ON viewers;
-CREATE POLICY "viewers_all" ON viewers FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "viewers_all" ON public.viewers;
+DROP POLICY IF EXISTS "viewers_read" ON public.viewers;
+DROP POLICY IF EXISTS "viewers_insert" ON public.viewers;
+DROP POLICY IF EXISTS "viewers_update" ON public.viewers;
+DROP POLICY IF EXISTS "viewers_delete" ON public.viewers;
+CREATE POLICY "viewers_read"   ON public.viewers FOR SELECT USING (true);
+CREATE POLICY "viewers_insert" ON public.viewers FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "viewers_update" ON public.viewers FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "viewers_delete" ON public.viewers FOR DELETE TO authenticated USING (true);
 
 
 -- ── 업보: 타입(종류) ──
@@ -165,8 +230,15 @@ CREATE TABLE IF NOT EXISTS upbo_types (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE upbo_types ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "upbo_types_all" ON upbo_types;
-CREATE POLICY "upbo_types_all" ON upbo_types FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "upbo_types_all" ON public.upbo_types;
+DROP POLICY IF EXISTS "upbo_types_read" ON public.upbo_types;
+DROP POLICY IF EXISTS "upbo_types_insert" ON public.upbo_types;
+DROP POLICY IF EXISTS "upbo_types_update" ON public.upbo_types;
+DROP POLICY IF EXISTS "upbo_types_delete" ON public.upbo_types;
+CREATE POLICY "upbo_types_read"   ON public.upbo_types FOR SELECT USING (true);
+CREATE POLICY "upbo_types_insert" ON public.upbo_types FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "upbo_types_update" ON public.upbo_types FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "upbo_types_delete" ON public.upbo_types FOR DELETE TO authenticated USING (true);
 
 
 -- ── 업보: 카운트 (시청자 × 타입 = 횟수) ──
@@ -175,12 +247,21 @@ CREATE TABLE IF NOT EXISTS upbo_counts (
   viewer_id  BIGINT NOT NULL,
   type_id    BIGINT NOT NULL,
   count      INT DEFAULT 0,
+  memo       TEXT,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE (viewer_id, type_id)
 );
+ALTER TABLE upbo_counts ADD COLUMN IF NOT EXISTS memo TEXT;
 ALTER TABLE upbo_counts ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "upbo_counts_all" ON upbo_counts;
-CREATE POLICY "upbo_counts_all" ON upbo_counts FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "upbo_counts_all" ON public.upbo_counts;
+DROP POLICY IF EXISTS "upbo_counts_read" ON public.upbo_counts;
+DROP POLICY IF EXISTS "upbo_counts_insert" ON public.upbo_counts;
+DROP POLICY IF EXISTS "upbo_counts_update" ON public.upbo_counts;
+DROP POLICY IF EXISTS "upbo_counts_delete" ON public.upbo_counts;
+CREATE POLICY "upbo_counts_read"   ON public.upbo_counts FOR SELECT USING (true);
+CREATE POLICY "upbo_counts_insert" ON public.upbo_counts FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "upbo_counts_update" ON public.upbo_counts FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "upbo_counts_delete" ON public.upbo_counts FOR DELETE TO authenticated USING (true);
 
 
 -- ── 문의함 ──
@@ -191,8 +272,15 @@ CREATE TABLE IF NOT EXISTS inquiries (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE inquiries ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "inquiries_all" ON inquiries;
-CREATE POLICY "inquiries_all" ON inquiries FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "inquiries_all" ON public.inquiries;
+DROP POLICY IF EXISTS "inquiries_read" ON public.inquiries;
+DROP POLICY IF EXISTS "inquiries_insert" ON public.inquiries;
+DROP POLICY IF EXISTS "inquiries_update" ON public.inquiries;
+DROP POLICY IF EXISTS "inquiries_delete" ON public.inquiries;
+CREATE POLICY "inquiries_read"   ON public.inquiries FOR SELECT TO authenticated USING (true);
+CREATE POLICY "inquiries_insert" ON public.inquiries FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "inquiries_update" ON public.inquiries FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "inquiries_delete" ON public.inquiries FOR DELETE TO authenticated USING (true);
 
 
 -- ── (옷장 OBS 오버레이 쓸 때만) "지금 트는 노래" 상태 1행 ──
@@ -206,7 +294,14 @@ CREATE TABLE IF NOT EXISTS public.overlay_state (
 INSERT INTO public.overlay_state (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 ALTER TABLE public.overlay_state ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "overlay_all" ON public.overlay_state;
-CREATE POLICY "overlay_all" ON public.overlay_state FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "overlay_state_read" ON public.overlay_state;
+DROP POLICY IF EXISTS "overlay_state_insert" ON public.overlay_state;
+DROP POLICY IF EXISTS "overlay_state_update" ON public.overlay_state;
+DROP POLICY IF EXISTS "overlay_state_delete" ON public.overlay_state;
+CREATE POLICY "overlay_state_read"   ON public.overlay_state FOR SELECT USING (true);
+CREATE POLICY "overlay_state_insert" ON public.overlay_state FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "overlay_state_update" ON public.overlay_state FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "overlay_state_delete" ON public.overlay_state FOR DELETE TO authenticated USING (true);
 
 
 -- ── 프로필 기본 행(id=1) 보장 ──

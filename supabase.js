@@ -1,68 +1,46 @@
-/* =============================================
-   supabase.js — Supabase 연동 공통 스크립트
-   ✅ 이 파일 상단 두 줄만 본인 값으로 교체!
-   ============================================= */
+/* Replace the two lines below when moving to a new Supabase project. */
 
 const SUPABASE_URL  = 'https://jkhwspwflodlttezhqbx.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpraHdzcHdmbG9kbHR0ZXpocWJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMzg0MDAsImV4cCI6MjA5OTYxNDQwMH0.RFz-P_MTHYJk-9Kf4r-daHDt5pc40MN7JlrP8fInS_Q';
 
-// ── Supabase 클라이언트 초기화 ──
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-/* =============================================
-   CRUD 헬퍼 함수
-   ============================================= */
-
-/** 전체 조회 (최신순)
- *  예) const rows = await fetchAll('schedule');
- */
+/* fetchAll('schedule', { order:'date', asc:true }) */
 async function fetchAll(table, options = {}) {
   let query = db.from(table).select('*');
   if (options.order)  query = query.order(options.order, { ascending: options.asc ?? false });
   if (options.limit)  query = query.limit(options.limit);
   if (options.filter) query = query.eq(options.filter.col, options.filter.val);
   const { data, error } = await query;
-  if (error) { console.error(`fetchAll(${table}) 오류:`, error); return []; }
+  if (error) { console.error(`fetchAll(${table})`, error); return []; }
   return data;
 }
 
-/** 단건 삽입
- *  예) await insertRow('song', { title: '봄날', artist: 'BTS' });
- */
+/* Returns false on failure; the raw error is kept in window.lastDbError. */
 async function insertRow(table, row) {
   const { error } = await db.from(table).insert(row);
-  if (error) { console.error(`insertRow(${table}) 오류:`, error); return false; }
+  window.lastDbError = error || null;
+  if (error) { console.error(`insertRow(${table})`, error); return false; }
   return true;
 }
 
-/** 단건 삭제
- *  예) await deleteRow('work', 3);
- */
 async function deleteRow(table, id) {
   const { error } = await db.from(table).delete().eq('id', id);
-  if (error) { console.error(`deleteRow(${table}) 오류:`, error); return false; }
+  window.lastDbError = error || null;
+  if (error) { console.error(`deleteRow(${table})`, error); return false; }
   return true;
 }
 
-/** 단건 수정
- *  예) await updateRow('schedule', 2, { title: '변경된 제목' });
- */
 async function updateRow(table, id, updates) {
   const { error } = await db.from(table).update(updates).eq('id', id);
-  if (error) { console.error(`updateRow(${table}) 오류:`, error); return false; }
+  window.lastDbError = error || null;
+  if (error) { console.error(`updateRow(${table})`, error); return false; }
   return true;
 }
 
-/* =============================================
-   이미지 압축 & 업로드 헬퍼
-   ============================================= */
-
-/** 이미지를 가로 maxW px 이하로 줄이고 JPEG로 압축 → Blob 반환
- *  원본이 10MB여도 보통 0.3~0.8MB로 줄어듦
- */
+/* GIF is returned untouched; compressing it would freeze the animation. */
 async function compressImage(file, maxW = 1200, quality = 0.8) {
-  // GIF(움짤)는 압축하면 정지화면 되니 원본 유지
   if (file.type === 'image/gif') return file;
   try {
     const img = await new Promise((res, rej) => {
@@ -81,14 +59,11 @@ async function compressImage(file, maxW = 1200, quality = 0.8) {
     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
     return blob || file;
   } catch (e) {
-    console.error('compressImage 오류:', e);
-    return file; // 실패 시 원본 그대로
+    console.error('compressImage', e);
+    return file;
   }
 }
 
-/** 이미지 압축 후 버킷에 업로드 → 공개 URL 반환 (실패 시 null)
- *  folder 예: 'notice', 'diary'
- */
 async function uploadImage(file, folder = 'uploads') {
   try {
     const blob = await compressImage(file);
@@ -97,16 +72,15 @@ async function uploadImage(file, folder = 'uploads') {
     const { error } = await db.storage.from('images').upload(path, blob, {
       upsert: true, contentType: 'image/jpeg'
     });
-    if (error) { console.error('uploadImage 오류:', error); return null; }
+    if (error) { console.error('uploadImage', error); return null; }
     const { data } = db.storage.from('images').getPublicUrl(path);
     return data?.publicUrl || null;
   } catch (e) {
-    console.error('uploadImage 예외:', e);
+    console.error('uploadImage', e);
     return null;
   }
 }
 
-/* ─ 토스트 유틸 ─ */
 function showToast(msg, duration = 2500) {
   let t = document.getElementById('toast');
   if (!t) {
@@ -119,7 +93,6 @@ function showToast(msg, duration = 2500) {
   setTimeout(() => t.classList.remove('show'), duration);
 }
 
-/* ─ iframe 자동 높이 ─ */
 function initIframeResize() {
   const send = () =>
     window.parent.postMessage({ type: 'resize', height: document.body.scrollHeight }, '*');
@@ -127,7 +100,5 @@ function initIframeResize() {
   new ResizeObserver(send).observe(document.body);
 }
 
-/* ─ 호환용 별칭 ─
-   일정/노래/일기/업보 페이지는 enableIframeAutoHeight() 라는 이름으로 호출합니다.
-   이 별칭이 없으면 그 페이지들에서 "함수 없음" 에러가 나고 iframe 높이가 자동조절되지 않습니다. */
+/* Alias: category pages call enableIframeAutoHeight(). */
 function enableIframeAutoHeight() { initIframeResize(); }

@@ -370,10 +370,9 @@ h1,h2,h3,.card-title,.nav a.nav-logo{ font-family:'Jua','Noto Sans KR',sans-seri
 .wrap{opacity:0;transition:opacity .3s} body.ready .wrap{opacity:1}
 @media (prefers-reduced-motion:reduce){ .wrap{opacity:1} }
 
-/* ═══════════════════════════════════════════════════════════
-   🍏 다꾸 테마 레이어 — 메인/프로필과 카테고리 페이지 통일
+/* 🍏 다꾸 테마 레이어 — 메인/프로필과 카테고리 페이지 통일
    (HTML 구조는 그대로, 스타일만 덮어씀)
-   ═══════════════════════════════════════════════════════════ */
+   */
 :root{
   --tape-m:rgba(158,212,191,.72); --tape-g:rgba(181,223,160,.72);
   --tape-b:rgba(190,225,245,.72); --tape-y:rgba(255,224,178,.8);
@@ -497,10 +496,9 @@ footer{ font-family:'Gaegu',cursive !important; font-size:17px !important; paddi
 .e-ico{display:inline-block;width:1.05em;height:1.05em;vertical-align:-0.18em;background-size:contain;background-repeat:no-repeat;background-position:center;margin:0 .04em}
 
 
-/* ══════════════════════════════════════════════
-   카테고리 nav → 커스텀 페이지와 동일한 마스킹테이프
+/* 카테고리 nav → 커스텀 페이지와 동일한 마스킹테이프
    (메인·프로필·미니게임과 색/순서 완전히 일치)
-   ══════════════════════════════════════════════ */
+   */
 :root{
   --tape-m:rgba(158,212,191,.72);   /* 민트 */
   --tape-g:rgba(181,223,160,.72);   /* 연두 */

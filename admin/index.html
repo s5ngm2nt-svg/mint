@@ -47,8 +47,11 @@
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <div class="login-title">🔐 Admin</div>
-    <div class="login-sub">관리자 비밀번호를 입력하세요</div>
-    <input class="input" type="password" id="pwInput" placeholder="비밀번호" onkeydown="if(event.key==='Enter') tryLogin()" style="margin-bottom:10px;text-align:center">
+    <div class="login-sub">Supabase 관리자 계정으로 로그인</div>
+    <input class="input" type="email" id="emailInput" placeholder="이메일" autocomplete="username"
+           onkeydown="if(event.key==='Enter') tryLogin()" style="margin-bottom:8px;text-align:center">
+    <input class="input" type="password" id="pwInput" placeholder="비밀번호" autocomplete="current-password"
+           onkeydown="if(event.key==='Enter') tryLogin()" style="margin-bottom:10px;text-align:center">
     <button class="btn btn-primary" style="width:100%" onclick="tryLogin()">입장 ♥</button>
     <div class="login-err" id="loginErr"></div>
   </div>
@@ -59,6 +62,9 @@
 <div class="container" id="adminBody" style="display:none">
   <div class="page-title">관리자 페이지</div>
   <div class="page-subtitle">수정 후 저장하면 바로 반영돼요 ♡</div>
+  <div style="display:flex;justify-content:flex-end;margin:-6px 0 10px">
+    <button class="btn" id="mtLogout" onclick="logout()" style="font-size:12px;padding:7px 14px">로그아웃</button>
+  </div>
 
   <div class="card" style="padding:6px">
     <div class="tabs">
@@ -287,6 +293,10 @@
       .type-cat.일반 { background:var(--main-light); color:var(--main-dark); }
       .type-cat.이벤트 { background:#fff0d6; color:#b07d18; }
       .type-name { flex:1; font-size:14px; color:var(--text); }
+      .vtot { font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px;
+              background:var(--main-light); color:var(--main-dark); white-space:nowrap; }
+      .vtot.zero { background:#eceef1; color:#8a94a0; }
+      .input-hint { font-size:12px; color:var(--text-soft); line-height:1.6; margin:-4px 0 10px; }
     </style>
 
     <div class="subtabs">
@@ -323,6 +333,7 @@
       </div>
       <div class="card">
         <div class="card-title">시청자 목록</div>
+        <div class="input-hint">업보 0개인 시청자는 업보 페이지에 표시되지 않습니다. 전부 보이려면 위 &quot;업보 페이지 설정&quot;을 &quot;전부 보이기&quot;로 변경.</div>
         <input class="input" id="v-search" placeholder="🔍 검색..." style="margin-bottom:12px" oninput="renderViewers()">
         <div id="viewer-list"><div class="spinner"></div></div>
       </div>
@@ -445,8 +456,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../supabase.js"></script>
 <script>
-  const ADMIN_PASSWORD = '1234';
-
   const profileKeys = [
     'avatar','soop-id','head-sub','quote','msg',
     'info-name','info-mbti','info-fandom','info-debut','info-birth',
@@ -470,15 +479,29 @@
     toastTimer = setTimeout(() => el.classList.remove('on'), 2200);
   }
 
-  function tryLogin() {
-    if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
-      document.getElementById('loginOverlay').style.display = 'none';
-      document.getElementById('adminBody').style.display = 'flex';
-      loadProfileFields();
-      loadNotice(); loadSchedule(); loadWork(); loadDiary(); loadSong(); loadDress(); loadInquiry(); loadOriginalSongs();
-    } else {
-      document.getElementById('loginErr').textContent = '비밀번호가 틀렸어요 >﹏<';
-    }
+  /* Login: Supabase Auth. Accounts are managed in Supabase > Authentication > Users. */
+  async function tryLogin() {
+    const email = (document.getElementById('emailInput').value || '').trim();
+    const password = document.getElementById('pwInput').value || '';
+    const err = document.getElementById('loginErr');
+    err.textContent = '';
+    if (!email || !password) { err.textContent = '이메일과 비밀번호를 입력하세요'; return; }
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    if (error) { err.textContent = '로그인 실패 — 이메일 또는 비밀번호를 확인하세요'; return; }
+    enterAdmin();
+  }
+
+  function enterAdmin() {
+    document.getElementById('pwInput').value = '';
+    document.getElementById('loginOverlay').style.setProperty('display', 'none', 'important');
+    document.getElementById('adminBody').style.setProperty('display', 'flex', 'important');
+    loadProfileFields();
+    loadNotice(); loadSchedule(); loadWork(); loadDiary(); loadSong(); loadDress(); loadInquiry(); loadOriginalSongs();
+  }
+
+  async function logout() {
+    try { await db.auth.signOut(); } catch (e) {}
+    location.reload();
   }
 
   function switchTab(name, btn) {
@@ -658,16 +681,26 @@
   }
   async function saveCounts() {
     if (!currentViewer) return;
-    const rows = types.map(t => ({ viewer_id: currentViewer, type_id: t.id, count: editCounts[t.id]||0,
-                                   memo: (editMemos[t.id]||'').trim() || null,
+    /* memo requires the upbo_counts.memo column (3_security_patch.sql). */
+    const base = types.map(t => ({ viewer_id: currentViewer, type_id: t.id, count: editCounts[t.id]||0,
                                    updated_at: new Date().toISOString() }));
-    const { error } = await db.from('upbo_counts').upsert(rows, { onConflict: 'viewer_id,type_id' });
-    if (error) { showToast('❌ 저장 실패: ' + error.message); return; }
-    showToast('✅ 저장됐어요!');
+    const rows = base.map((r, i) => Object.assign({}, r, { memo: (editMemos[types[i].id]||'').trim() || null }));
+    let res = await db.from('upbo_counts').upsert(rows, { onConflict: 'viewer_id,type_id' });
+    let memoSkipped = false;
+    if (res.error && /memo/i.test(res.error.message || '')) {
+      res = await db.from('upbo_counts').upsert(base, { onConflict: 'viewer_id,type_id' });
+      memoSkipped = !res.error;
+    }
+    if (res.error) { showToast('❌ 저장 실패: ' + res.error.message); return; }
     counts = await fetchAll('upbo_counts', { order:'id', asc:true });
+    renderViewers();
+    showToast(memoSkipped ? '저장됨 — 메모는 3_security_patch.sql 실행 후 저장됩니다' : '✅ 저장됐어요!');
   }
 
   /* ===== 시청자 관리 ===== */
+  function viewerTotal(vid) {
+    return counts.filter(c => c.viewer_id === vid && c.count > 0).reduce((s, c) => s + c.count, 0);
+  }
   function renderViewers() {
     const q = (document.getElementById('v-search')?.value || '').trim().toLowerCase();
     const list = viewers.filter(v => (v.nickname||'').toLowerCase().includes(q) || (v.soop_id||'').toLowerCase().includes(q));
@@ -677,6 +710,7 @@
       <div class="vrow">
         <span class="vn">${v.nickname}</span>
         <span class="vid">${v.soop_id||'-'}</span>
+        <span class="vtot ${viewerTotal(v.id)?'':'zero'}">업보 ${viewerTotal(v.id)}</span>
         <button class="vbtn" onclick="editViewer(${v.id})">수정</button>
         <button class="vbtn del" onclick="delViewer(${v.id})">삭제</button>
       </div>`).join('');
@@ -686,8 +720,12 @@
     if (!nick) { showToast('❗ 닉네임 필수!'); return; }
     const maxOrder = viewers.reduce((m,v)=>Math.max(m, v.sort_order||0), 0);
     const ok = await insertRow('viewers', { nickname: nick, soop_id: document.getElementById('v-soop').value.trim(), sort_order: maxOrder+1 });
-    if (ok) { showToast('✅ 추가!'); document.getElementById('v-nick').value=''; document.getElementById('v-soop').value=''; loadWork(); }
-    else showToast('❌ 실패');
+    if (!ok) { showToast('❌ 실패' + (window.lastDbError ? ': ' + window.lastDbError.message : '')); return; }
+    await loadWork();
+    if (!viewers.some(v => v.nickname === nick)) { showToast('❌ 저장은 됐지만 목록에 없어요 — 새로고침 후 확인'); return; }
+    document.getElementById('v-nick').value=''; document.getElementById('v-soop').value='';
+    document.getElementById('v-search').value=''; renderViewers();
+    showToast('✅ 추가!');
   }
   async function editViewer(id) {
     const v = viewers.find(x=>x.id===id);
@@ -941,6 +979,14 @@
       loadDress();
     } else showToast('❌ 추가 실패 (옷장 SQL 실행했는지 확인)');
   }
+
+  /* Restore session on reload. Runs after the whole script is parsed. */
+  (async function () {
+    try {
+      const { data } = await db.auth.getSession();
+      if (data && data.session) enterAdmin();
+    } catch (e) {}
+  })();
 </script>
 </body>
 </html>

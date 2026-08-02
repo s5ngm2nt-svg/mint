@@ -7,14 +7,27 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 /* fetchAll('schedule', { order:'date', asc:true }) */
+/* One response is capped at 1000 rows, so pages beyond that are fetched with range().
+   id is always added as a tiebreaker: without it, ties in the sort column make
+   range() paging skip or repeat rows. */
+const PAGE_SIZE = 1000;
 async function fetchAll(table, options = {}) {
-  let query = db.from(table).select('*');
-  if (options.order)  query = query.order(options.order, { ascending: options.asc ?? false });
-  if (options.limit)  query = query.limit(options.limit);
-  if (options.filter) query = query.eq(options.filter.col, options.filter.val);
-  const { data, error } = await query;
-  if (error) { console.error(`fetchAll(${table})`, error); return []; }
-  return data;
+  const out = [];
+  let from = 0;
+  for (;;) {
+    let query = db.from(table).select('*');
+    if (options.order) query = query.order(options.order, { ascending: options.asc ?? false });
+    query = query.order('id', { ascending: true });
+    if (options.filter) query = query.eq(options.filter.col, options.filter.val);
+    if (options.limit) query = query.limit(options.limit);
+    else query = query.range(from, from + PAGE_SIZE - 1);
+    const { data, error } = await query;
+    if (error) { console.error(`fetchAll(${table})`, error); return out; }
+    if (data && data.length) out.push(...data);
+    if (options.limit || !data || data.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return out;
 }
 
 /* Returns false on failure; the raw error is kept in window.lastDbError. */

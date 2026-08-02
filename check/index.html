@@ -120,11 +120,23 @@
       }
     }
 
+    /* 한 번의 조회는 1000행까지만 돌려준다 — 넘으면 최근 저장분이 안 읽힌다 */
+    {
+      const all = await db.from('upbo_counts').select('*', { count: 'exact', head: true });
+      const real = await db.from('upbo_counts').select('*', { count: 'exact', head: true }).gt('count', 0);
+      if (!all.error) {
+        const over = all.count > 1000;
+        add(over ? 'no' : 'ok', '업보 기록 행 수',
+            `${all.count}행 (실제 기록 ${real.error ? '?' : real.count}행)`
+            + (over ? ' — 1000행을 넘어 최근 저장분이 안 읽힙니다. 4_upbo_cleanup.sql 을 Run 하세요' : ''));
+      }
+    }
+
     /* 업보 페이지에 실제로 몇 명이 보이는지 */
     {
       const [v, c] = await Promise.all([
         db.from('viewers').select('id'),
-        db.from('upbo_counts').select('viewer_id,count')
+        db.from('upbo_counts').select('viewer_id,count').gt('count', 0)
       ]);
       if (!v.error && !c.error) {
         const has = new Set(c.data.filter(x => x.count > 0).map(x => x.viewer_id));

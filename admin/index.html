@@ -679,20 +679,41 @@
     editCounts[tid] = Math.max(0, (editCounts[tid]||0) + d);
     document.getElementById('cv-'+tid).textContent = editCounts[tid];
   }
+  /* Only rows that hold something are stored. Writing 0 for every type made the
+     table grow by 65 rows per viewer and pushed real records past the row cap. */
   async function saveCounts() {
     if (!currentViewer) return;
-    /* memo requires the upbo_counts.memo column (3_security_patch.sql). */
-    const base = types.map(t => ({ viewer_id: currentViewer, type_id: t.id, count: editCounts[t.id]||0,
-                                   updated_at: new Date().toISOString() }));
-    const rows = base.map((r, i) => Object.assign({}, r, { memo: (editMemos[types[i].id]||'').trim() || null }));
-    let res = await db.from('upbo_counts').upsert(rows, { onConflict: 'viewer_id,type_id' });
+    const base = [], withMemo = [], empty = [];
+    types.forEach(t => {
+      const c = editCounts[t.id] || 0;
+      const m = (editMemos[t.id] || '').trim();
+      if (c > 0 || m) {
+        base.push({ viewer_id: currentViewer, type_id: t.id, count: c, updated_at: new Date().toISOString() });
+        withMemo.push({ viewer_id: currentViewer, type_id: t.id, count: c, memo: m || null, updated_at: new Date().toISOString() });
+      } else empty.push(t.id);
+    });
+
     let memoSkipped = false;
-    if (res.error && /memo/i.test(res.error.message || '')) {
-      res = await db.from('upbo_counts').upsert(base, { onConflict: 'viewer_id,type_id' });
-      memoSkipped = !res.error;
+    if (withMemo.length) {
+      /* memo needs the upbo_counts.memo column (3_security_patch.sql). */
+      let res = await db.from('upbo_counts').upsert(withMemo, { onConflict: 'viewer_id,type_id' });
+      if (res.error && /memo/i.test(res.error.message || '')) {
+        res = await db.from('upbo_counts').upsert(base, { onConflict: 'viewer_id,type_id' });
+        memoSkipped = !res.error;
+      }
+      if (res.error) { showToast('❌ 저장 실패: ' + res.error.message); return; }
     }
-    if (res.error) { showToast('❌ 저장 실패: ' + res.error.message); return; }
+    if (empty.length) {
+      const del = await db.from('upbo_counts').delete().eq('viewer_id', currentViewer).in('type_id', empty);
+      if (del.error) { showToast('❌ 정리 실패: ' + del.error.message); return; }
+    }
+
     counts = await fetchAll('upbo_counts', { order:'id', asc:true });
+    const saved = counts.filter(c => c.viewer_id === currentViewer && c.count > 0).length;
+    if (withMemo.filter(r => r.count > 0).length !== saved) {
+      showToast('❌ 저장했지만 다시 읽으면 값이 달라요 — check 페이지로 확인하세요');
+      renderViewers(); return;
+    }
     renderViewers();
     showToast(memoSkipped ? '저장됨 — 메모는 3_security_patch.sql 실행 후 저장됩니다' : '✅ 저장됐어요!');
   }
